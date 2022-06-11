@@ -18,4 +18,4 @@
 lambda_build/
 
 # Intellij files
-.idea/
+*.idea
