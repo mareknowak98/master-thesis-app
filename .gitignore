@@ -16,3 +16,6 @@
 
 # build lambdas
 lambda_build/
+
+# Intellij files
+.idea/
