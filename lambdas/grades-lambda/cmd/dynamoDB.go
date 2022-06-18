@@ -8,6 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	"time"
 )
 
@@ -18,7 +19,7 @@ func (c *Client) SaveGrade(request events.APIGatewayProxyRequest, tableName stri
 	var grade InputGrades
 	err := json.Unmarshal([]byte(request.Body), &grade)
 	if err != nil {
-		fmt.Println(err)
+		return err
 	}
 
 	// Get current date and attach it to struct
@@ -44,8 +45,58 @@ func (c *Client) SaveGrade(request events.APIGatewayProxyRequest, tableName stri
 	return nil
 }
 
-func (c *Client) GetGrades(request events.APIGatewayProxyRequest, tableName string) error {
+// QueryDynamo Query dynamoDB only with hashkey
+func (c *Client) QueryDynamo(context context.Context, tableName string, hashKeyValue string) (dynamodb.QueryOutput, error) {
+	out, err := c.DynamoCl.Query(context, &dynamodb.QueryInput{
+		TableName:              aws.String(tableName),
+		KeyConditionExpression: aws.String("UserId = :hashKey"),
+		ExpressionAttributeValues: map[string]types.AttributeValue{
+			":hashKey": &types.AttributeValueMemberS{Value: hashKeyValue},
+		},
+	})
+	if err != nil {
+		return *out, err
+	}
+
+	return *out, nil
+}
+
+// Parse DynamoDB response to json
+func parseDynamoToInputGrades(out dynamodb.QueryOutput) (string, error) {
+	var items []InputGrades
+
+	// Unmarshall list of Maps to InputGrades structure
+	err := attributevalue.UnmarshalListOfMaps(out.Items, &items)
+
+	//Marshall to json format
+	jsonOut, err := json.Marshal(items)
+
+	if err != nil {
+		return "", err
+	}
+	return string(jsonOut), nil
+}
+
+// GetGrades This function fetches grades from grades table
+func (c *Client) GetGrades(request events.APIGatewayProxyRequest, tableName string) (string, error) {
 	fmt.Println(request.QueryStringParameters)
 
-	return nil
+	// If query string empty
+	if len(request.QueryStringParameters) == 0 {
+		return "", fmt.Errorf("not enough parameters\n")
+	}
+
+	//Get by UserId
+	out, err := c.QueryDynamo(context.Background(), tableName, request.QueryStringParameters["UserId"])
+	if err != nil {
+		return "", err
+	}
+
+	//Parse output to json
+	jsonOut, err := parseDynamoToInputGrades(out)
+	if err != nil {
+		return "", err
+	}
+
+	return jsonOut, nil
 }

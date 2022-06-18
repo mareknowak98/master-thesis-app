@@ -2,7 +2,7 @@ resource "aws_dynamodb_table" "mylearn_grades" {
   name         = "mylearn-grades"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "UserId"
-  range_key    = "ClassYear"
+  range_key    = "Date"
 
   attribute {
     name = "UserId"
@@ -10,7 +10,7 @@ resource "aws_dynamodb_table" "mylearn_grades" {
   }
 
   attribute {
-    name = "ClassYear"
+    name = "Date"
     type = "S"
   }
 

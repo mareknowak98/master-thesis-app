@@ -1,10 +1,11 @@
 package cmd
 
 type InputGrades struct {
-	UserId string `json:"userId"`
-	Date string `json:"date"`
-	ClassYear string `json:"classYear"`
-	Grade string `json:"grade"`
+	UserId    string `json:"UserId"`
+	Date      string `json:"Date"`
+	ClassYear string `json:"ClassYear"`
+	Subject   string `json:"Subject"`
+	Grade     string `json:"Grade"`
 }
 
 //type InputGrades struct {

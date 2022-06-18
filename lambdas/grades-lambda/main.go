@@ -7,19 +7,6 @@ import (
 	"mylearnproject/lambdas/grades-lambda/cmd"
 )
 
-//func HandleRequest(ctx context.Context, lambdaInp cmd.InputGrades) (events.APIGatewayProxyResponse, error) {
-//	//fmt.Println(lambdaInp)
-//
-//	// Initialize AWS client
-//	c := cmd.NewClient("eu-central-1")
-//
-//	// Save data to DynamoDB
-//	c.SaveGrade(lambdaInp, "mylearn-grades")
-//
-//	var tmp events.APIGatewayProxyResponse
-//	return tmp, nil
-//}
-
 func HandleRequest(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	//Initialize response object
 	var resp events.APIGatewayProxyResponse
@@ -44,7 +31,7 @@ func HandleRequest(request events.APIGatewayProxyRequest) (events.APIGatewayProx
 
 	// GET method
 	if request.HTTPMethod == "GET" {
-		err := c.GetGrades(request, tableName)
+		out, err := c.GetGrades(request, tableName)
 		if err != nil {
 			fmt.Println(err)
 			resp.StatusCode = 400
@@ -52,6 +39,7 @@ func HandleRequest(request events.APIGatewayProxyRequest) (events.APIGatewayProx
 			return resp, nil
 		}
 		resp.StatusCode = 200
+		resp.Body = out
 		return resp, nil
 	}
 
