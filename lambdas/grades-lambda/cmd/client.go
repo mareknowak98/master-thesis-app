@@ -3,11 +3,9 @@ package cmd
 import (
 	"context"
 	"github.com/aws/aws-sdk-go-v2/config"
-	"github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"strings"
 )
-
 
 const (
 	DefaultRegion = "eu-central-1" // Used when region not provided
@@ -16,8 +14,7 @@ const (
 // AWS client
 
 type Client struct {
-	DynamoCl    *dynamodb.Client
-	CloudWatchCl *cloudwatchlogs.Client
+	DynamoCl *dynamodb.Client
 }
 
 func NewClient(region string) *Client {
@@ -32,8 +29,6 @@ func NewClient(region string) *Client {
 
 	// Return new client
 	return &Client{
-		DynamoCl:    dynamodb.NewFromConfig(cfg),
-		CloudWatchCl: cloudwatchlogs.NewFromConfig(cfg),
+		DynamoCl: dynamodb.NewFromConfig(cfg),
 	}
 }
-
