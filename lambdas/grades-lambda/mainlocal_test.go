@@ -1,10 +1,9 @@
 package main
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
-	"mylearnproject/lambdas/grades-lambda/cmd"
+	"github.com/aws/aws-lambda-go/events"
 	"testing"
 )
 
@@ -14,7 +13,7 @@ func TestHandleRequest(t *testing.T) {
 
 	input := getDebugInput()
 
-	res, _ := HandleRequest(context.Background(), input)
+	res, _ := HandleRequest(input)
 
 	fmt.Println("Response:")
 	fmt.Println(res.StatusCode)
@@ -22,8 +21,8 @@ func TestHandleRequest(t *testing.T) {
 
 }
 
-func getDebugInput() cmd.InputGrades {
-	var inp cmd.InputGrades
+func getDebugInput() events.APIGatewayProxyRequest {
+	var inp events.APIGatewayProxyRequest
 
 	err := json.Unmarshal([]byte(`
 	{
