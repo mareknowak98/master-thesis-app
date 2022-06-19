@@ -1,10 +1,8 @@
 package main
 
 import (
-	"context"
-	"encoding/json"
 	"fmt"
-	"mylearnproject/lambdas/grades-lambda/cmd"
+	"github.com/aws/aws-lambda-go/events"
 	"testing"
 )
 
@@ -14,7 +12,7 @@ func TestHandleRequest(t *testing.T) {
 
 	input := getDebugInput()
 
-	res, _ := HandleRequest(context.Background(), input)
+	res, _ := HandleRequest(input)
 
 	fmt.Println("Response:")
 	fmt.Println(res.StatusCode)
@@ -22,19 +20,52 @@ func TestHandleRequest(t *testing.T) {
 
 }
 
-func getDebugInput() cmd.InputGrades {
-	var inp cmd.InputGrades
+//func getDebugInput() events.APIGatewayProxyRequest {
+//	var inp cmd.InputGrades
+//
+//	err := json.Unmarshal([]byte(`
+//	{
+//		"UserId": "123",
+//		"ClassYear": "8a*2022",
+//		"Grade": "4+"
+//	}`), &inp)
+//
+//	var request events.APIGatewayProxyRequest
+//	if err != nil {
+//		fmt.Println(err)
+//	}
+//	b, err := json.Marshal(inp)
+//	if err != nil {
+//		fmt.Println(err)
+//	}
+//	request.Body = string(b)
+//	request.HTTPMethod = "POST"
+//	fmt.Printf("Input %s\n", inp)
+//	fmt.Printf("Request body %s\n", request.Body)
+//	fmt.Printf("Request method %s\n", request.HTTPMethod)
+//
+//	return request
+//}
 
-	err := json.Unmarshal([]byte(`
-	{
-		"UserId": "123",
-		"ClassYear": "sometest",
-		"Grade": "4+"
-	}`), &inp)
+//func getDebugInput() events.APIGatewayProxyRequest {
+//	var request events.APIGatewayProxyRequest
+//
+//	request.HTTPMethod = "GET"
+//	fmt.Printf("Request body %s\n", request.Body)
+//	fmt.Printf("Request method %s\n", request.HTTPMethod)
+//
+//	return request
+//}
 
-	if err != nil {
-		fmt.Println(err)
-	}
+func getDebugInput() events.APIGatewayProxyRequest {
+	var request events.APIGatewayProxyRequest
 
-	return inp
+	request.HTTPMethod = "GET"
+	m := make(map[string]string)
+	m["UserId"] = "123"
+	request.QueryStringParameters = m
+	fmt.Printf("Request body %s\n", request.Body)
+	fmt.Printf("Request method %s\n", request.HTTPMethod)
+
+	return request
 }

@@ -1,4 +1,4 @@
-# pdc-alb-logs-notifications IAM
+# mylearn-grades IAM
 resource "aws_iam_role" "mylearn_grades" {
   name = format("%s-%s", "mylearn-grades", var.region)
 
