@@ -75,6 +75,11 @@ resource "aws_api_gateway_deployment" "mylearn" {
   lifecycle {
     create_before_destroy = true
   }
+
+  depends_on = [
+    aws_api_gateway_integration.mylearn_grades_get,
+    aws_api_gateway_integration.mylearn_grades_post
+  ]
 }
 
 output "rest_api_url" {

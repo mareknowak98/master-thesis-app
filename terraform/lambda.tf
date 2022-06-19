@@ -1,5 +1,5 @@
 resource "aws_lambda_function" "mylearn_grades" {
-  # Find .zip file with name in 'PdcLogsNotifications*.zip' format
+  # Find .zip file with name in 'grades-lambda*.zip' format
   filename      = format("%s/%s", "../lambdas/lambda_build", one(fileset("../lambdas/lambda_build", "{grades-lambda}*.zip")))
   function_name = "mylearn-grades"
   handler       = "main"
@@ -14,7 +14,30 @@ resource "aws_lambda_function" "mylearn_grades" {
 
   environment {
     variables = {
-      GRADES_TABLE = "mylearn-grades"
+      REGION       = var.region
+      GRADES_TABLE = aws_dynamodb_table.mylearn_grades.name
+    }
+  }
+}
+
+resource "aws_lambda_function" "cognito_after_register" {
+  # Find .zip file with name in 'cognito-after-register-lambda*.zip' format
+  filename      = format("%s/%s", "../lambdas/lambda_build", one(fileset("../lambdas/lambda_build", "{cognito-after-register-lambda}*.zip")))
+  function_name = "cognito-after-register-lambda"
+  handler       = "main"
+  runtime       = "go1.x"
+  role          = aws_iam_role.cognito_after_register.arn
+  timeout       = 15
+  memory_size   = 128
+
+  tags = {
+    AppName = "mylearn-app"
+  }
+
+  environment {
+    variables = {
+      REGION       = var.region
+      GRADES_TABLE = aws_dynamodb_table.cognito_users.name
     }
   }
 }
