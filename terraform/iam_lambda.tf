@@ -32,3 +32,33 @@ resource "aws_iam_role_policy" "mylearn_grades" {
     ]
   })
 }
+
+
+# cognito-users IAM
+resource "aws_iam_role" "cognito_after_register" {
+  name = format("%s-%s", "cognito-after-register", var.region)
+
+  assume_role_policy  = file("files/AWSLambdaTrustPolicy.json")
+  managed_policy_arns = ["arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"]
+}
+
+resource "aws_iam_role_policy" "cognito_after_register" {
+  name = format("%s-%s", "cognito-after-register", var.region)
+  role = aws_iam_role.cognito_after_register.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        "Effect"   = "Allow",
+        "Action"   = "dynamodb:PutItem",
+        "Resource" = aws_dynamodb_table.cognito_users.arn
+      },
+      {
+        "Effect" : "Allow",
+        "Action" : "cognito-idp:*",
+        "Resource" : aws_cognito_user_pool.mylearn.arn
+      }
+    ]
+  })
+}
