@@ -25,6 +25,7 @@ resource "aws_cognito_user_pool" "mylearn" {
   lambda_config {
     post_confirmation = aws_lambda_function.cognito_after_register.arn
   }
+
 }
 
 # Cognito user groups

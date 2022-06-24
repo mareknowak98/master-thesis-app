@@ -20,6 +20,15 @@ resource "aws_lambda_function" "mylearn_grades" {
   }
 }
 
+resource "aws_lambda_permission" "cognito_after_register" {
+  statement_id  = "AllowExecutionFromCognito"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.cognito_after_register.function_name
+  principal     = "cognito-idp.amazonaws.com"
+  source_arn    = aws_cognito_user_pool.mylearn.arn
+  depends_on    = [aws_lambda_function.cognito_after_register]
+}
+
 resource "aws_lambda_function" "cognito_after_register" {
   # Find .zip file with name in 'cognito-after-register-lambda*.zip' format
   filename      = format("%s/%s", "../lambdas/lambda_build", one(fileset("../lambdas/lambda_build", "{cognito-after-register-lambda}*.zip")))
