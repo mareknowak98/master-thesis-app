@@ -62,3 +62,11 @@ resource "aws_iam_role_policy" "cognito_after_register" {
     ]
   })
 }
+
+# auth-lambda IAM
+resource "aws_iam_role" "auth_lambda" {
+  name = format("%s-%s", "auth-lambda", var.region)
+
+  assume_role_policy  = file("files/AWSLambdaTrustPolicy.json")
+  managed_policy_arns = ["arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"]
+}
