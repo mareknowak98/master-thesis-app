@@ -20,6 +20,15 @@ resource "aws_lambda_function" "mylearn_grades" {
   }
 }
 
+resource "aws_lambda_permission" "cognito_after_register" {
+  statement_id  = "AllowExecutionFromCognito"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.cognito_after_register.function_name
+  principal     = "cognito-idp.amazonaws.com"
+  source_arn    = aws_cognito_user_pool.mylearn.arn
+  depends_on    = [aws_lambda_function.cognito_after_register]
+}
+
 resource "aws_lambda_function" "cognito_after_register" {
   # Find .zip file with name in 'cognito-after-register-lambda*.zip' format
   filename      = format("%s/%s", "../lambdas/lambda_build", one(fileset("../lambdas/lambda_build", "{cognito-after-register-lambda}*.zip")))
@@ -38,6 +47,28 @@ resource "aws_lambda_function" "cognito_after_register" {
     variables = {
       REGION       = var.region
       GRADES_TABLE = aws_dynamodb_table.cognito_users.name
+    }
+  }
+}
+
+resource "aws_lambda_function" "auth_lambda" {
+  # Find .zip file with name in 'auth-lambda*.zip' format
+  filename      = format("%s/%s", "../lambdas/lambda_build", one(fileset("../lambdas/lambda_build", "{auth-lambda}*.zip")))
+  function_name = "auth-lambda"
+  handler       = "main"
+  runtime       = "go1.x"
+  role          = aws_iam_role.auth_lambda.arn
+  timeout       = 15
+  memory_size   = 128
+
+  tags = {
+    AppName = "mylearn-app"
+  }
+
+  environment {
+    variables = {
+      REGION       = var.region
+      USER_POOL_ID = aws_cognito_user_pool.mylearn.id
     }
   }
 }

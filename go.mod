@@ -3,15 +3,16 @@ module mylearnproject
 go 1.17
 
 require (
+	github.com/MicahParks/keyfunc v1.1.0
 	github.com/aws/aws-lambda-go v1.32.0
+	github.com/aws/aws-sdk-go-v2 v1.16.5
 	github.com/aws/aws-sdk-go-v2/config v1.15.10
 	github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue v1.9.3
-	github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs v1.15.8
 	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.15.6
+	github.com/golang-jwt/jwt/v4 v4.4.2
 )
 
 require (
-	github.com/aws/aws-sdk-go-v2 v1.16.5 // indirect
 	github.com/aws/aws-sdk-go-v2/credentials v1.12.5 // indirect
 	github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.12.6 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/configsources v1.1.12 // indirect

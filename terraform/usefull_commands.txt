@@ -1,6 +1,6 @@
 aws cognito-idp sign-up \
   --region eu-central-1 \
-  --client-id 2gscq4kinrfd5qfhrrjfgv3773 \
+  --client-id 6esclelr3uh1sip5v79dhcqoou \
   --username testuser2 \
   --user-attributes Name="email",Value="jane@example.com" \
   --password Passw0rd!
@@ -8,5 +8,5 @@ aws cognito-idp sign-up \
 
 aws cognito-idp admin-confirm-sign-up \
   --region eu-central-1 \
-  --user-pool-id eu-central-1_kPqRcf7mi \
+  --user-pool-id eu-central-1_kwwHHpwML \
   --username testuser2

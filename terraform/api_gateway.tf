@@ -16,10 +16,11 @@ resource "aws_api_gateway_resource" "mylearn_grades" {
 }
 
 resource "aws_api_gateway_method" "mylearn_grades_get" {
-  authorization = "NONE"
   http_method   = "GET"
   resource_id   = aws_api_gateway_resource.mylearn_grades.id
   rest_api_id   = aws_api_gateway_rest_api.mylearn.id
+  authorization = "CUSTOM"
+  authorizer_id = aws_api_gateway_authorizer.mylearn.id
 }
 
 resource "aws_api_gateway_integration" "mylearn_grades_get" {
@@ -32,10 +33,11 @@ resource "aws_api_gateway_integration" "mylearn_grades_get" {
 }
 
 resource "aws_api_gateway_method" "mylearn_grades_post" {
-  authorization = "NONE"
   http_method   = "POST"
   resource_id   = aws_api_gateway_resource.mylearn_grades.id
   rest_api_id   = aws_api_gateway_rest_api.mylearn.id
+  authorization = "CUSTOM"
+  authorizer_id = aws_api_gateway_authorizer.mylearn.id
 }
 
 resource "aws_api_gateway_integration" "mylearn_grades_post" {
