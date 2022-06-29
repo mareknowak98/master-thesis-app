@@ -70,3 +70,42 @@ resource "aws_iam_role" "auth_lambda" {
   assume_role_policy  = file("files/AWSLambdaTrustPolicy.json")
   managed_policy_arns = ["arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"]
 }
+
+
+# chat-lambda IAM
+resource "aws_iam_role" "mylearn_chat" {
+  name = format("%s-%s", "mylearn-chat", var.region)
+
+  assume_role_policy  = file("files/AWSLambdaTrustPolicy.json")
+  managed_policy_arns = ["arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"]
+}
+
+resource "aws_iam_role_policy" "mylearn_chat" {
+  name = format("%s-%s", "mylearn-chat", var.region)
+  role = aws_iam_role.mylearn_chat.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        "Effect" = "Allow",
+        "Action" = [
+          "dynamodb:DescribeReservedCapacityOfferings",
+          "dynamodb:ListGlobalTables",
+          "dynamodb:ListTables",
+          "dynamodb:DescribeReservedCapacity",
+          "dynamodb:ListBackups",
+          "dynamodb:PurchaseReservedCapacityOfferings",
+          "dynamodb:DescribeLimits",
+          "dynamodb:ListStreams"
+        ],
+        "Resource" = "*"
+      },
+      {
+        "Effect" = "Allow",
+        "Action" = "dynamodb:*",
+        "Resource" = aws_dynamodb_table.messages.arn
+      }
+    ]
+  })
+}
