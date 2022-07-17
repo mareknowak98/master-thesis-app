@@ -22,6 +22,8 @@ func HandleRequest(ctx context.Context, request events.APIGatewayV2CustomAuthori
 
 	//get user group from token claims, then map []interface {} to string
 	userGroup := parsedToken.Claims.(jwt.MapClaims)["cognito:groups"].([]interface{})[0].(string)
+	fmt.Printf("token: %#v", parsedToken)
+
 	isAllowed := cmd.IsAllowed(endpointUrl, userGroup)
 
 	// Return deny if user has no permission to access endpoint (based on user group)

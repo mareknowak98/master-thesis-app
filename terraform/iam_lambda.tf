@@ -72,7 +72,7 @@ resource "aws_iam_role" "auth_lambda" {
 }
 
 
-# chat-lambda IAM
+# chat-lambdawebsocket IAM
 resource "aws_iam_role" "mylearn_chat" {
   name = format("%s-%s", "mylearn-chat", var.region)
 
@@ -102,8 +102,8 @@ resource "aws_iam_role_policy" "mylearn_chat" {
         "Resource" = "*"
       },
       {
-        "Effect" = "Allow",
-        "Action" = "dynamodb:*",
+        "Effect"   = "Allow",
+        "Action"   = "dynamodb:*",
         "Resource" = aws_dynamodb_table.messages.arn
       }
     ]

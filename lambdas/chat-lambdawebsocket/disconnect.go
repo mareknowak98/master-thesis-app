@@ -1,10 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
-	//"github.com/golang-jwt/jwt/v4"
 	"log"
 	"os"
 )
@@ -24,6 +24,7 @@ func Disconnect(request APIGatewayWebsocketProxyRequest) (events.APIGatewayProxy
 
 	//id := request.RequestContext.Authorizer.(map[string]interface{})["cognito:username"].(string)
 	connectionID := request.RequestContext.ConnectionID
+
 	RemoveSocket(connectionID)
 
 	return events.APIGatewayProxyResponse{
@@ -35,18 +36,38 @@ func Disconnect(request APIGatewayWebsocketProxyRequest) (events.APIGatewayProxy
 func RemoveSocket(connectionID string) {
 	tableName := os.Getenv("MESSAGES_TABLE")
 
-	input := &dynamodb.DeleteItemInput{
-		TableName: aws.String(tableName),
-		Key: map[string]*dynamodb.AttributeValue{
-			"connectionID": &dynamodb.AttributeValue{
+	fmt.Println(connectionID)
+	inputScan := &dynamodb.ScanInput{
+		ExpressionAttributeValues: map[string]*dynamodb.AttributeValue{
+			":a": {
 				S: aws.String(connectionID),
 			},
 		},
+		FilterExpression: aws.String("connectionID = :a"),
+		TableName:        aws.String(tableName),
 	}
 
 	db := dynamodb.New(GetSession())
 
-	_, err := db.DeleteItem(input)
+	result, err := db.Scan(inputScan)
+
+	fmt.Println(err)
+	fmt.Println(result)
+
+	fmt.Println("---------------")
+	userId := result.Items[0]["userId"].S
+	fmt.Println(*userId)
+
+	input := &dynamodb.DeleteItemInput{
+		TableName: aws.String(tableName),
+		Key: map[string]*dynamodb.AttributeValue{
+			"userId": &dynamodb.AttributeValue{
+				S: aws.String(*userId),
+			},
+		},
+	}
+
+	_, err = db.DeleteItem(input)
 	if err != nil {
 		log.Fatalln("Unable to remove user socket map", err.Error())
 	}

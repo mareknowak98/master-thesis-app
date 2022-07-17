@@ -48,7 +48,7 @@ func Connect(request APIGatewayWebsocketProxyRequest) (events.APIGatewayProxyRes
 }
 
 type UserSocket struct {
-	ID           string `json:"id"`
+	UserID       string `json:"userId"`
 	ConnectionID string `json:"connectionID"`
 }
 
@@ -56,7 +56,7 @@ type UserSocket struct {
 func StoreSocket(id, connectionID string) error {
 	fmt.Println("In store socket")
 	m := UserSocket{
-		ID:           id,
+		UserID:       id,
 		ConnectionID: connectionID,
 	}
 
