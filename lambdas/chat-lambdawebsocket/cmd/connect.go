@@ -1,4 +1,4 @@
-package main
+package cmd
 
 import (
 	"fmt"
@@ -8,19 +8,13 @@ import (
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
 	"github.com/golang-jwt/jwt/v4"
 	"log"
-	"mylearnproject/lambdas/auth-lambda/cmd"
 	"os"
 )
 
 // Connect will receive the $connect request
 // It will handle the authorization also
 func Connect(request APIGatewayWebsocketProxyRequest) (events.APIGatewayProxyResponse, error) {
-	//fmt.Println("Connection fnc started")
-	//if request.RequestContext.Authorizer == nil {
-	//	return Authorizer(request)
-	//}
-
-	parsedToken, err := cmd.DecodeToken(request.Headers["Authorization"])
+	parsedToken, err := DecodeToken(request.Headers["Authorization"])
 	if err != nil {
 		fmt.Println("eror")
 		fmt.Println(err)
@@ -31,7 +25,6 @@ func Connect(request APIGatewayWebsocketProxyRequest) (events.APIGatewayProxyRes
 
 	id := parsedToken.Claims.(jwt.MapClaims)["username"].(string)
 
-	//id := request.RequestContext.Authorizer.(map[string]interface{})["cognito:username"].(string)
 	fmt.Printf("User id %v\n", id)
 
 	fmt.Printf("RequestContext %v\n", request.RequestContext)
@@ -67,7 +60,7 @@ func StoreSocket(id, connectionID string) error {
 		log.Fatalln("Unable to marshal user socket map", err.Error())
 	}
 
-	tableName := os.Getenv("MESSAGES_TABLE")
+	tableName := os.Getenv("CONNECTIONS_TABLE")
 
 	input := &dynamodb.PutItemInput{
 		TableName: aws.String(tableName),

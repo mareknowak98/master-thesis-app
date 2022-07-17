@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/aws/aws-lambda-go/events"
+	"mylearnproject/lambdas/chat-lambdawebsocket/cmd"
 	"os"
 	"testing"
 )
@@ -24,7 +25,7 @@ func TestHandleRequest(t *testing.T) {
 	tmp.RequestContext.ConnectionID = "Va_3vexLFiACHxA="
 	tmp.Body = "{\n   \"type\" : \"message\",\n   \"payload\" : {\n        \"from\" : \"oneuser\",\n        \"to\" : \"testuser2\",\n        \"message\" : \"something\"\n   }\n}"
 
-	Default(tmp)
+	cmd.Default(tmp)
 
 }
 

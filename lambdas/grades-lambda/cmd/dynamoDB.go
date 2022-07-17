@@ -32,8 +32,8 @@ func (c *Client) SaveGrade(request events.APIGatewayProxyRequest, tableName stri
 		return err
 	}
 
-	// Create dynamoDB item input
-	// Put item in dynamoDB
+	// Create dynamoDB.go item input
+	// Put item in dynamoDB.go
 	_, err = c.DynamoCl.PutItem(context.Background(), &dynamodb.PutItemInput{
 		TableName: aws.String(tableName),
 		Item:      av})
@@ -45,7 +45,7 @@ func (c *Client) SaveGrade(request events.APIGatewayProxyRequest, tableName stri
 	return nil
 }
 
-// QueryDynamo Query dynamoDB only with hashkey
+// QueryDynamo Query dynamoDB.go only with hashkey
 func (c *Client) QueryDynamo(context context.Context, tableName string, hashKeyValue string) (dynamodb.QueryOutput, error) {
 	out, err := c.DynamoCl.Query(context, &dynamodb.QueryInput{
 		TableName:              aws.String(tableName),

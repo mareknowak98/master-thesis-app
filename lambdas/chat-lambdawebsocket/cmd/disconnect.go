@@ -1,4 +1,4 @@
-package main
+package cmd
 
 import (
 	"fmt"
@@ -11,18 +11,6 @@ import (
 
 // Disconnect will receive the $disconnect requests
 func Disconnect(request APIGatewayWebsocketProxyRequest) (events.APIGatewayProxyResponse, error) {
-	//parsedToken, err := cmd.DecodeToken(request.Headers["Authorization"])
-	//if err != nil {
-	//	fmt.Println("eror")
-	//	fmt.Println(err)
-	//}
-	//fmt.Println("Connection fnc after stareted")
-	//
-	//fmt.Printf("token claims: %#v\n", parsedToken.Claims.(jwt.MapClaims))
-	//
-	//id := parsedToken.Claims.(jwt.MapClaims)["username"].(string)
-
-	//id := request.RequestContext.Authorizer.(map[string]interface{})["cognito:username"].(string)
 	connectionID := request.RequestContext.ConnectionID
 
 	RemoveSocket(connectionID)
@@ -34,7 +22,7 @@ func Disconnect(request APIGatewayWebsocketProxyRequest) (events.APIGatewayProxy
 
 // RemoveSocket will remove the id,connectionId socket from dynamodb
 func RemoveSocket(connectionID string) {
-	tableName := os.Getenv("MESSAGES_TABLE")
+	tableName := os.Getenv("CONNECTIONS_TABLE")
 
 	fmt.Println(connectionID)
 	inputScan := &dynamodb.ScanInput{

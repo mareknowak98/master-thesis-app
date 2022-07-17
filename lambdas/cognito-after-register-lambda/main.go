@@ -20,7 +20,7 @@ func HandleRequest(ctx context.Context, request cmd.CognitoEventRequest) (cmd.Co
 	c := cmd.NewClient("eu-central-1")
 	tableName := "cognito-users"
 
-	// Save user into dynamoDB
+	// Save user into dynamoDB.go
 	err := c.SaveUser(request, tableName)
 	if err != nil {
 		fmt.Println(err)

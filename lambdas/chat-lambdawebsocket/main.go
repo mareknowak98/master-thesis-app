@@ -4,37 +4,26 @@ import (
 	"fmt"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"log"
+	"mylearnproject/lambdas/chat-lambdawebsocket/cmd"
 )
 
 // Handler is the base handler that will receive all web socket request
-func Handler(request APIGatewayWebsocketProxyRequest) (events.APIGatewayProxyResponse, error) {
+func Handler(request cmd.APIGatewayWebsocketProxyRequest) (events.APIGatewayProxyResponse, error) {
 	fmt.Printf("Request :%#v\n", request)
+
+	//region := os.Getenv("REGION")
+	//c := cmd.NewClient(region)
 
 	switch request.RequestContext.RouteKey {
 	case "$connect":
-		return Connect(request)
+		return cmd.Connect(request)
 	case "$disconnect":
-		return Disconnect(request)
+		return cmd.Disconnect(request)
 	default:
-		return Default(request)
+		return cmd.Default(request)
 	}
 }
 
 func main() {
 	lambda.Start(Handler)
-}
-
-// GetSession creates a new aws session and returns it
-func GetSession() *session.Session {
-	sess, err := session.NewSession(&aws.Config{
-		Region: aws.String("eu-central-1"),
-	})
-	if err != nil {
-		log.Fatalln("Unable to create AWS session", err.Error())
-	}
-
-	return sess
 }

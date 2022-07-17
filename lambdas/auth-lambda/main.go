@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/golang-jwt/jwt/v4"
@@ -11,7 +10,7 @@ import (
 
 // HandleRequest Handle lambda request (from api gateway)
 func HandleRequest(ctx context.Context, request events.APIGatewayV2CustomAuthorizerV1Request) (events.APIGatewayCustomAuthorizerResponse, error) {
-	fmt.Println(request)
+	//fmt.Println(request)
 	endpointUrl := cmd.MethodArnToUrl(request.MethodArn)
 	parsedToken, err := cmd.DecodeToken(request.AuthorizationToken)
 
@@ -22,7 +21,6 @@ func HandleRequest(ctx context.Context, request events.APIGatewayV2CustomAuthori
 
 	//get user group from token claims, then map []interface {} to string
 	userGroup := parsedToken.Claims.(jwt.MapClaims)["cognito:groups"].([]interface{})[0].(string)
-	fmt.Printf("token: %#v", parsedToken)
 
 	isAllowed := cmd.IsAllowed(endpointUrl, userGroup)
 
