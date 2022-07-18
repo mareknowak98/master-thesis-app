@@ -80,10 +80,17 @@ resource "aws_api_gateway_integration" "mylearn_users_get" {
   http_method             = aws_api_gateway_method.mylearn_users_get.http_method
   integration_http_method = "POST"
   type                    = "AWS_PROXY"
-  uri                     = aws_lambda_function.mylearn_grades.invoke_arn
+  uri                     = aws_lambda_function.user_lambda.invoke_arn
 }
 
+resource "aws_lambda_permission" "mylearn_users" {
+  statement_id  = "AllowExecutionFromAPIGateway"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.user_lambda.function_name
+  principal     = "apigateway.amazonaws.com"
 
+  source_arn = "${aws_api_gateway_rest_api.mylearn.execution_arn}/*/*"
+}
 
 ##########################################
 ## API deployment
@@ -107,7 +114,8 @@ resource "aws_api_gateway_deployment" "mylearn" {
 
   depends_on = [
     aws_api_gateway_integration.mylearn_grades_get,
-    aws_api_gateway_integration.mylearn_grades_post
+    aws_api_gateway_integration.mylearn_grades_post,
+    aws_api_gateway_integration.mylearn_users_get
   ]
 }
 

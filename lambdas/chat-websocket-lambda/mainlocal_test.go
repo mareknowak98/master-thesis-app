@@ -2,9 +2,7 @@ package main
 
 import (
 	"github.com/aws/aws-lambda-go/events"
-	"mylearnproject/lambdas/chat-websocket-lambda/cmd"
 	"os"
-	"testing"
 )
 
 //
@@ -17,17 +15,17 @@ import (
 //
 // File to test running lambda locally
 
-func TestHandleRequest(t *testing.T) {
-	_ = os.Setenv("MESSAGES_TABLE", "chat-connections")
-	_ = os.Setenv("WEBSOKET_API", "rjyithf86i")
-
-	tmp := APIGatewayWebsocketProxyRequest{}
-	tmp.RequestContext.ConnectionID = "Va_3vexLFiACHxA="
-	tmp.Body = "{\n   \"type\" : \"message\",\n   \"payload\" : {\n        \"from\" : \"oneuser\",\n        \"to\" : \"testuser2\",\n        \"message\" : \"something\"\n   }\n}"
-
-	cmd.Default(tmp)
-
-}
+//func TestHandleRequest(t *testing.T) {
+//	_ = os.Setenv("MESSAGES_TABLE", "chat-connections")
+//	_ = os.Setenv("WEBSOKET_API", "rjyithf86i")
+//
+//	tmp := APIGatewayWebsocketProxyRequest{}
+//	tmp.RequestContext.ConnectionID = "Va_3vexLFiACHxA="
+//	tmp.Body = "{\n   \"type\" : \"message\",\n   \"payload\" : {\n        \"from\" : \"oneuser\",\n        \"to\" : \"testuser2\",\n        \"message\" : \"something\"\n   }\n}"
+//
+//	cmd.Default(tmp)
+//
+//}
 
 //func TestHandleRequest(t *testing.T) {
 //	_ = os.Setenv("MESSAGES_TABLE", "chat-connections")

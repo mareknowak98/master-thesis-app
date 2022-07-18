@@ -137,7 +137,7 @@ resource "aws_iam_role_policy" "mylearn_users" {
     Statement = [
       {
         "Effect"   = "Allow",
-        "Action"   = "dynamodb:PutItem",
+        "Action"   = "dynamodb:Scan",
         "Resource" = aws_dynamodb_table.cognito_users.arn
       }
     ]
