@@ -34,3 +34,39 @@ resource "aws_dynamodb_table" "cognito_users" {
     AppName = "mylearn-app"
   }
 }
+
+resource "aws_dynamodb_table" "chat_connections" {
+  name         = "chat-connections"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "userId"
+
+  attribute {
+    name = "userId"
+    type = "S"
+  }
+
+  tags = {
+    AppName = "mylearn-app"
+  }
+}
+
+resource "aws_dynamodb_table" "chat_messages" {
+  name         = "mylearn-chat-messages"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "UserFromTo"
+  range_key    = "Timestamp"
+
+  attribute {
+    name = "UserFromTo"
+    type = "S"
+  }
+
+  attribute {
+    name = "Timestamp"
+    type = "S"
+  }
+
+  tags = {
+    AppName = "mylearn-app"
+  }
+}

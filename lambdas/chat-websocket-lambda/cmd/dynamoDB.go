@@ -2,32 +2,41 @@ package cmd
 
 import (
 	"context"
+	"fmt"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
+	"os"
 	"time"
 )
 
-// SaveUser This function is triggered each time when new user is created in Cognito
-// Parse Cognito request body and save new user to dynamoDB.go
-func (c *Client) SaveUser(request CognitoEventRequest, tableName string) error {
-	// FInitialize InputUsers which will be saved into DynamoDB
-	var user InputUsers
+func storeMessageToDynamo(tableName string, message MessageWithInfo) error {
+	fmt.Println("storigntodynamo")
+	msg := MessageSave{}
 
-	// Fill user initial data
-	user.UserId = request.Request["userAttributes"]["sub"]
-	user.Username = request.Username
-	user.Email = request.Request["userAttributes"]["email"]
+	msg.UserFromTo = fmt.Sprintf("%s:%s", message.From, message.To)
 
 	// Get current date and attach it to struct
 	dt := time.Now()
-	user.CreatedAt = dt.Format("01-02-2006 15:04:05")
+	msg.Timestamp = dt.Format("01-02-2006 15:04:05")
+
+	// Attach message
+	fmt.Printf("Mesgg: %s\n", message.Message.(string))
+	msg.Message = message.Message.(string)
+
+	fmt.Printf("tst: %#v\n", msg)
 
 	// Marshall each element to 'map[string]types.AttributeValue' format
-	av, err := attributevalue.MarshalMap(user)
+	av, err := attributevalue.MarshalMap(msg)
 	if err != nil {
 		return err
 	}
+
+	fmt.Printf("av: %#v\n", av)
+
+	//TODO remake it to aws sdk v2
+	region := os.Getenv("REGION")
+	c := NewClient(region)
 
 	// Create dynamoDB.go item input
 	// Put item in dynamoDB.go
@@ -38,6 +47,8 @@ func (c *Client) SaveUser(request CognitoEventRequest, tableName string) error {
 	if err != nil {
 		return err
 	}
+
+	fmt.Println("ENDstorigntodynamo")
 
 	return nil
 }

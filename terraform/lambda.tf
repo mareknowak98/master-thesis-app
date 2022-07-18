@@ -72,3 +72,30 @@ resource "aws_lambda_function" "auth_lambda" {
     }
   }
 }
+
+
+resource "aws_lambda_function" "chat_lambda" {
+  # Find .zip file with name in 'chat-websocket-lambda*.zip' format
+  filename      = format("%s/%s", "../lambdas/lambda_build", one(fileset("../lambdas/lambda_build", "{chat-websocket-lambda}*.zip")))
+  function_name = "chat-websocket-lambda"
+  handler       = "main"
+  runtime       = "go1.x"
+  role          = aws_iam_role.mylearn_chat.arn
+  timeout       = 15
+  memory_size   = 128
+
+  tags = {
+    AppName = "mylearn-app"
+  }
+
+  environment {
+    variables = {
+      REGION            = var.region
+      USER_POOL_ID      = aws_cognito_user_pool.mylearn.id
+      CONNECTIONS_TABLE = aws_dynamodb_table.chat_connections.name
+      DEPLOYMENT_TYPE   = var.deployment
+      MESSAGES_TABLE    = aws_dynamodb_table.chat_messages.name
+      WEBSOCKET_API     = aws_apigatewayv2_api.chat_api.id
+    }
+  }
+}

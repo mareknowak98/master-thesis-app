@@ -5,6 +5,7 @@ go 1.17
 require (
 	github.com/MicahParks/keyfunc v1.1.0
 	github.com/aws/aws-lambda-go v1.32.0
+	github.com/aws/aws-sdk-go v1.44.42
 	github.com/aws/aws-sdk-go-v2 v1.16.5
 	github.com/aws/aws-sdk-go-v2/config v1.15.10
 	github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue v1.9.3
