@@ -15,8 +15,8 @@ resource "aws_apigatewayv2_route" "chat_connect" {
 }
 
 resource "aws_apigatewayv2_integration" "chat_connect" {
-  api_id           = aws_apigatewayv2_api.chat_api.id
-  integration_type = "AWS_PROXY"
+  api_id             = aws_apigatewayv2_api.chat_api.id
+  integration_type   = "AWS_PROXY"
   integration_method = "POST"
   integration_uri    = aws_lambda_function.chat_lambda.invoke_arn
 }
@@ -28,8 +28,8 @@ resource "aws_apigatewayv2_route" "chat_disconnect" {
 }
 
 resource "aws_apigatewayv2_integration" "chat_disconnect" {
-  api_id           = aws_apigatewayv2_api.chat_api.id
-  integration_type = "AWS_PROXY"
+  api_id             = aws_apigatewayv2_api.chat_api.id
+  integration_type   = "AWS_PROXY"
   integration_method = "POST"
   integration_uri    = aws_lambda_function.chat_lambda.invoke_arn
 }
@@ -42,8 +42,8 @@ resource "aws_apigatewayv2_route" "chat_default" {
 
 #lambda integrations
 resource "aws_apigatewayv2_integration" "chat_default" {
-  api_id           = aws_apigatewayv2_api.chat_api.id
-  integration_type = "AWS_PROXY"
+  api_id             = aws_apigatewayv2_api.chat_api.id
+  integration_type   = "AWS_PROXY"
   integration_method = "POST"
   integration_uri    = aws_lambda_function.chat_lambda.invoke_arn
 }

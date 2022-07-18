@@ -93,6 +93,40 @@ resource "aws_lambda_permission" "mylearn_users" {
 }
 
 ##########################################
+# chat service endpoints
+resource "aws_api_gateway_resource" "mylearn_rest_chat" {
+  parent_id   = aws_api_gateway_rest_api.mylearn.root_resource_id
+  path_part   = "messages"
+  rest_api_id = aws_api_gateway_rest_api.mylearn.id
+}
+
+resource "aws_api_gateway_method" "mylearn_rest_chat_get" {
+  http_method   = "GET"
+  resource_id   = aws_api_gateway_resource.mylearn_rest_chat.id
+  rest_api_id   = aws_api_gateway_rest_api.mylearn.id
+  authorization = "CUSTOM"
+  authorizer_id = aws_api_gateway_authorizer.mylearn.id
+}
+
+resource "aws_api_gateway_integration" "mylearn_rest_chat_get" {
+  rest_api_id             = aws_api_gateway_rest_api.mylearn.id
+  resource_id             = aws_api_gateway_resource.mylearn_rest_chat.id
+  http_method             = aws_api_gateway_method.mylearn_rest_chat_get.http_method
+  integration_http_method = "POST"
+  type                    = "AWS_PROXY"
+  uri                     = aws_lambda_function.chat_rest_lambda.invoke_arn
+}
+
+resource "aws_lambda_permission" "mylearn_rest_chat" {
+  statement_id  = "AllowExecutionFromAPIGateway"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.chat_rest_lambda.function_name
+  principal     = "apigateway.amazonaws.com"
+
+  source_arn = "${aws_api_gateway_rest_api.mylearn.execution_arn}/*/*"
+}
+
+##########################################
 ## API deployment
 resource "aws_api_gateway_stage" "mylearn" {
   deployment_id = aws_api_gateway_deployment.mylearn.id

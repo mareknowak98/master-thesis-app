@@ -100,6 +100,29 @@ resource "aws_lambda_function" "chat_lambda" {
   }
 }
 
+resource "aws_lambda_function" "chat_rest_lambda" {
+  # Find .zip file with name in 'chat-websocket-lambda*.zip' format
+  filename      = format("%s/%s", "../lambdas/lambda_build", one(fileset("../lambdas/lambda_build", "{chat-rest-lambda}*.zip")))
+  function_name = "chat-rest-lambda"
+  handler       = "main"
+  runtime       = "go1.x"
+  role          = aws_iam_role.mylearn_rest_chat.arn
+  timeout       = 15
+  memory_size   = 128
+
+  tags = {
+    AppName = "mylearn-app"
+  }
+
+  environment {
+    variables = {
+      REGION         = var.region
+      MESSAGES_TABLE = aws_dynamodb_table.chat_messages.name
+    }
+  }
+}
+
+
 resource "aws_lambda_function" "user_lambda" {
   # Find .zip file with name in 'user-lambda*.zip' format
   filename      = format("%s/%s", "../lambdas/lambda_build", one(fileset("../lambdas/lambda_build", "{user-lambda}*.zip")))
