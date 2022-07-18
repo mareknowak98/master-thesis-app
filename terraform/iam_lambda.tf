@@ -119,3 +119,27 @@ resource "aws_iam_role_policy" "mylearn_chat" {
     ]
   })
 }
+
+# user-lambda IAM
+resource "aws_iam_role" "mylearn_users" {
+  name = format("%s-%s", "user-lambda", var.region)
+
+  assume_role_policy  = file("files/AWSLambdaTrustPolicy.json")
+  managed_policy_arns = ["arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"]
+}
+
+resource "aws_iam_role_policy" "mylearn_users" {
+  name = format("%s-%s", "user-lambda", var.region)
+  role = aws_iam_role.mylearn_users.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        "Effect"   = "Allow",
+        "Action"   = "dynamodb:PutItem",
+        "Resource" = aws_dynamodb_table.cognito_users.arn
+      }
+    ]
+  })
+}

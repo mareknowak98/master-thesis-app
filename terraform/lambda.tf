@@ -99,3 +99,25 @@ resource "aws_lambda_function" "chat_lambda" {
     }
   }
 }
+
+resource "aws_lambda_function" "user_lambda" {
+  # Find .zip file with name in 'user-lambda*.zip' format
+  filename      = format("%s/%s", "../lambdas/lambda_build", one(fileset("../lambdas/lambda_build", "{user-lambda}*.zip")))
+  function_name = "user-lambda"
+  handler       = "main"
+  runtime       = "go1.x"
+  role          = aws_iam_role.mylearn_users.arn
+  timeout       = 15
+  memory_size   = 128
+
+  tags = {
+    AppName = "mylearn-app"
+  }
+
+  environment {
+    variables = {
+      REGION     = var.region
+      USER_TABLE = aws_dynamodb_table.cognito_users.name
+    }
+  }
+}
