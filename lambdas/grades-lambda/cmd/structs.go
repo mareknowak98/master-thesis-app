@@ -7,10 +7,3 @@ type InputGrades struct {
 	Subject   string `json:"Subject"`
 	Grade     string `json:"Grade"`
 }
-
-//type InputGrades struct {
-//	UserId string
-//	Date string
-//	ClassYear string
-//	Grade string
-//}

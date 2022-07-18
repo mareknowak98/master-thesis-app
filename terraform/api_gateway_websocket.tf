@@ -15,14 +15,10 @@ resource "aws_apigatewayv2_route" "chat_connect" {
 }
 
 resource "aws_apigatewayv2_integration" "chat_connect" {
-  api_id                    = aws_apigatewayv2_api.chat_api.id
-  integration_type          = "AWS_PROXY"
-#  connection_type           = "INTERNET"
-#  content_handling_strategy = "CONVERT_TO_TEXT"
-  integration_method        = "POST"
-  integration_uri           = aws_lambda_function.chat_lambda.invoke_arn
-#  passthrough_behavior      = "WHEN_NO_MATCH"
-
+  api_id             = aws_apigatewayv2_api.chat_api.id
+  integration_type   = "AWS_PROXY"
+  integration_method = "POST"
+  integration_uri    = aws_lambda_function.chat_lambda.invoke_arn
 }
 
 resource "aws_apigatewayv2_route" "chat_disconnect" {
@@ -32,15 +28,10 @@ resource "aws_apigatewayv2_route" "chat_disconnect" {
 }
 
 resource "aws_apigatewayv2_integration" "chat_disconnect" {
-  api_id                    = aws_apigatewayv2_api.chat_api.id
-  integration_type          = "AWS_PROXY"
-#  connection_type           = "INTERNET"
-#  content_handling_strategy = "CONVERT_TO_TEXT"
-  #  description               = "Lambda example"
-  integration_method        = "POST"
-  integration_uri           = aws_lambda_function.chat_lambda.invoke_arn
-#  passthrough_behavior      = "WHEN_NO_MATCH"
-
+  api_id             = aws_apigatewayv2_api.chat_api.id
+  integration_type   = "AWS_PROXY"
+  integration_method = "POST"
+  integration_uri    = aws_lambda_function.chat_lambda.invoke_arn
 }
 
 resource "aws_apigatewayv2_route" "chat_default" {
@@ -51,14 +42,10 @@ resource "aws_apigatewayv2_route" "chat_default" {
 
 #lambda integrations
 resource "aws_apigatewayv2_integration" "chat_default" {
-  api_id                    = aws_apigatewayv2_api.chat_api.id
-  integration_type          = "AWS_PROXY"
-#  connection_type           = "INTERNET"
-#  content_handling_strategy = "CONVERT_TO_TEXT"
-  integration_method        = "POST"
-  integration_uri           = aws_lambda_function.chat_lambda.invoke_arn
-#  passthrough_behavior      = "WHEN_NO_MATCH"
-
+  api_id             = aws_apigatewayv2_api.chat_api.id
+  integration_type   = "AWS_PROXY"
+  integration_method = "POST"
+  integration_uri    = aws_lambda_function.chat_lambda.invoke_arn
 }
 
 #deployment
@@ -77,24 +64,6 @@ resource "aws_apigatewayv2_deployment" "chat" {
   ]
 
 }
-
-#resource "aws_apigatewayv2_deployment" "chat_disconnect" {
-#  api_id      = aws_apigatewayv2_route.chat_disconnect.api_id
-#  description = "Example deployment"
-#
-#  lifecycle {
-#    create_before_destroy = true
-#  }
-#}
-#
-#resource "aws_apigatewayv2_deployment" "chat_default" {
-#  api_id      = aws_apigatewayv2_route.chat_default.api_id
-#  description = "Example deployment"
-#
-#  lifecycle {
-#    create_before_destroy = true
-#  }
-#}
 
 #stages
 resource "aws_apigatewayv2_stage" "chat_api" {

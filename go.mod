@@ -10,6 +10,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/config v1.15.10
 	github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue v1.9.3
 	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.15.6
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/golang-jwt/jwt/v4 v4.4.2
 )
 
