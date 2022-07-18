@@ -127,6 +127,40 @@ resource "aws_lambda_permission" "mylearn_rest_chat" {
 }
 
 ##########################################
+# cognito users management service endpoints
+resource "aws_api_gateway_resource" "mylearn_cognito_users_login" {
+  parent_id   = aws_api_gateway_rest_api.mylearn.root_resource_id
+  path_part   = "login"
+  rest_api_id = aws_api_gateway_rest_api.mylearn.id
+}
+
+resource "aws_api_gateway_method" "mylearn_cognito_users_login_post" {
+  http_method   = "POST"
+  resource_id   = aws_api_gateway_resource.mylearn_cognito_users_login.id
+  rest_api_id   = aws_api_gateway_rest_api.mylearn.id
+  authorization = "NONE"
+}
+
+resource "aws_api_gateway_integration" "mylearn_cognito_users_login_post" {
+  rest_api_id             = aws_api_gateway_rest_api.mylearn.id
+  resource_id             = aws_api_gateway_resource.mylearn_cognito_users_login.id
+  http_method             = aws_api_gateway_method.mylearn_cognito_users_login_post.http_method
+  integration_http_method = "POST"
+  type                    = "AWS_PROXY"
+  uri                     = aws_lambda_function.cognito_user_lambda.invoke_arn
+}
+
+resource "aws_lambda_permission" "mylearn_cognito_users" {
+  statement_id  = "AllowExecutionFromAPIGateway"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.cognito_user_lambda.function_name
+  principal     = "apigateway.amazonaws.com"
+
+  source_arn = "${aws_api_gateway_rest_api.mylearn.execution_arn}/*/*"
+}
+
+
+##########################################
 ## API deployment
 resource "aws_api_gateway_stage" "mylearn" {
   deployment_id = aws_api_gateway_deployment.mylearn.id
