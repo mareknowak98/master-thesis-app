@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
-	"mylearnproject/lambdas/chat-lambdawebsocket/cmd"
+	"mylearnproject/lambdas/chat-websocket-lambda/cmd"
 )
 
 // Handler is the base handler that will receive all web socket request

@@ -17,7 +17,7 @@ func Default(request APIGatewayWebsocketProxyRequest) (events.APIGatewayProxyRes
 	tableName := os.Getenv("CONNECTIONS_TABLE")
 	tableNameMessages := os.Getenv("MESSAGES_TABLE")
 
-	websocketApi := os.Getenv("WEBSOKET_API")
+	websocketApi := os.Getenv("WEBSOCKET_API")
 	deploymentType := os.Getenv("DEPLOYMENT_TYPE")
 
 	b := MessageAction{}

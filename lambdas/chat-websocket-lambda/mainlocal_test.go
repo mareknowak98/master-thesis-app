@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/aws/aws-lambda-go/events"
-	"mylearnproject/lambdas/chat-lambdawebsocket/cmd"
+	"mylearnproject/lambdas/chat-websocket-lambda/cmd"
 	"os"
 	"testing"
 )
