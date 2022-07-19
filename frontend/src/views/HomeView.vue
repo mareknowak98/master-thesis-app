@@ -2,20 +2,23 @@
   <div class="home">
     <div class="grid">
       <div class="col-6 col-offset-3">
-        <HelloWorld/>
+        <div class="surface-card p-4 shadow-2 border-round w-full">
+          <NavBar/>
+        </div>
       </div>
     </div>
-
   </div>
 </template>
 
 <script>
-import HelloWorld from "@/components/HelloWorld.vue";
+import NavBar from "@/components/NavBar.vue";
+import TabMenu from 'primevue/tabmenu';
 
 export default {
   name: "HomeView",
   components: {
-    HelloWorld,
+    NavBar,
+    TabMenu,
   },
 };
 </script>
