@@ -7,8 +7,11 @@
         <NavBar/>
         <div class="login">
           <div class="surface-card border-round w-full">
-            <div class="text-center mb-5">
-              <img src="../assets/mylearn_logo.png" alt="Image" height="150" class="mb-3">
+            <div class="text-center mb-3"></div>
+            <div class="text-center mb-2">
+              <div class="text-center">
+                <img src="../assets/mylearn_logo.png" alt="Image" height="150" class="mb-3">
+              </div>
               <div class="text-900 text-3xl font-medium mb-3">Welcome Back</div>
               <span class="text-600 font-medium line-height-3">Don't have an account?</span>
               <a class="font-medium no-underline ml-2 text-blue-500 cursor-pointer">Create today!</a>
@@ -25,7 +28,7 @@
                 <a class="font-medium no-underline ml-2 text-blue-500 text-right cursor-pointer">Forgot password?</a>
               </div>
 
-              <Button label="Sign In" icon="pi pi-user" class="w-full"></Button>
+              <Button label="Sign In" icon="pi pi-lock" class="w-full"></Button>
             </div>
           </div>
         </div>
