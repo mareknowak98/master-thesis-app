@@ -1,7 +1,11 @@
 <template>
   <div class="home">
-    <HelloWorld msg="Welcome to Your Vue.js App" />
-    <Button label="buttontest"></Button>
+    <div class="grid">
+      <div class="col-6 col-offset-3">
+        <HelloWorld/>
+      </div>
+    </div>
+
   </div>
 </template>
 
