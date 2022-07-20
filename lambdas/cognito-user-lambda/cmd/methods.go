@@ -21,5 +21,7 @@ func (c *Client) Login(request events.APIGatewayProxyRequest) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return token, nil
+
+	data, _ := json.Marshal(token)
+	return string(data), nil
 }
