@@ -1,7 +1,7 @@
 
 locals {
   region = var.region
-  name = "mylearn-frontend-cluster"
+  name   = "mylearn-frontend-cluster"
 
   user_data = <<-EOT
     #!/bin/bash
@@ -50,38 +50,38 @@ module "ecs" {
 
 resource "aws_security_group" "main" {
   ingress {
-    from_port       = 22
-    to_port         = 22
-    protocol        = "tcp"
-    cidr_blocks     = ["0.0.0.0/0"]
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   ingress {
-    from_port       = 443
-    to_port         = 443
-    protocol        = "tcp"
-    cidr_blocks     = ["0.0.0.0/0"]
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   ingress {
-    from_port       = 80
-    to_port         = 80
-    protocol        = "tcp"
-    cidr_blocks     = ["0.0.0.0/0"]
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   ingress {
-    from_port       = 8080
-    to_port         = 8080
-    protocol        = "tcp"
-    cidr_blocks     = ["0.0.0.0/0"]
+    from_port   = 8080
+    to_port     = 8080
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {
-    from_port       = 0
-    to_port         = 65535
-    protocol        = "tcp"
-    cidr_blocks     = ["0.0.0.0/0"]
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 }
 data "aws_iam_policy_document" "main" {
@@ -123,9 +123,9 @@ data "aws_availability_zones" "availability_zones" {
 }
 
 resource "aws_autoscaling_group" "main" {
-  name                      = "asg"
-  availability_zones = data.aws_availability_zones.availability_zones.names
-  launch_configuration      = aws_launch_configuration.main.name
+  name                 = "asg"
+  availability_zones   = data.aws_availability_zones.availability_zones.names
+  launch_configuration = aws_launch_configuration.main.name
 
   desired_capacity          = 1
   min_size                  = 1
@@ -136,8 +136,10 @@ resource "aws_autoscaling_group" "main" {
   protect_from_scale_in = true
 
   lifecycle {
-    ignore_changes = [load_balancers, target_group_arns]
+    ignore_changes = [load_balancers]
   }
+
+  target_group_arns = [aws_lb_target_group.mylearn.arn]
 }
 
 data "template_file" "docker_run" {
@@ -152,7 +154,7 @@ data "template_file" "docker_run" {
     "interactive": true,
     "portMappings": [
         {
-          "hostPort": 8080,
+          "hostPort": 80,
           "protocol": "tcp",
           "containerPort": 8080
         }
