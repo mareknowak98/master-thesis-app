@@ -162,8 +162,8 @@ resource "aws_lambda_function" "cognito_user_lambda" {
 
   environment {
     variables = {
-      REGION       = var.region
-      USER_POOL_ID = aws_cognito_user_pool.mylearn.id
+      REGION            = var.region
+      USER_POOL_ID      = aws_cognito_user_pool.mylearn.id
       COGNITO_CLIENT_ID = aws_cognito_user_pool_client.webapp.id
     }
   }

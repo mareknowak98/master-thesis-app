@@ -187,9 +187,6 @@ resource "aws_api_gateway_deployment" "mylearn" {
   ]
 }
 
-output "rest_api_url" {
-  value = aws_api_gateway_stage.mylearn.invoke_url
-}
 
 
 ##########################################
