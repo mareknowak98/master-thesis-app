@@ -7,5 +7,5 @@ output "websocket_chat_api_url" {
 }
 
 output "cloudfront_url" {
-  value = aws_cloudfront_distribution.mylearn.domain_name
+  value = aws_cloudfront_distribution.mylearn.domain_nameq
 }
