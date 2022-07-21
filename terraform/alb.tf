@@ -52,5 +52,4 @@ resource "aws_lb_listener" "mylearn" {
     type             = "forward"
     target_group_arn = aws_lb_target_group.mylearn.arn
   }
-
 }

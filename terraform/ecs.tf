@@ -16,7 +16,7 @@ locals {
 module "ecs" {
   source = "terraform-aws-modules/ecs/aws"
 
-  cluster_name = local.name
+  cluster_name = "mylearn-frontend-cluster"
 
   cluster_configuration = {
     execute_command_configuration = {
@@ -48,7 +48,9 @@ module "ecs" {
 
 }
 
-resource "aws_security_group" "main" {
+// TODO restrict it only to Load Balancer
+// open ports for development purposes
+resource "aws_security_group" "mylearn" {
   ingress {
     from_port   = 22
     to_port     = 22
@@ -113,7 +115,7 @@ resource "aws_iam_instance_profile" "ecs_agent" {
 resource "aws_launch_configuration" "main" {
   image_id             = "ami-094d4d00fd7462815"
   iam_instance_profile = aws_iam_instance_profile.ecs_agent.name
-  security_groups      = [aws_security_group.main.id]
+  security_groups      = [aws_security_group.mylearn.id]
   user_data            = "#!/bin/bash\necho ECS_CLUSTER=${local.name} >> /etc/ecs/ecs.config"
   instance_type        = "t2.micro"
 }

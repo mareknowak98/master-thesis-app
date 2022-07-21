@@ -1,13 +1,8 @@
-locals {
-  s3_origin_id = format("%s-%s", "myS3Origin", var.region)
-}
-
 data "aws_cloudfront_cache_policy" "caching_disabled" {
   name = "Managed-CachingDisabled"
 }
 
-resource "aws_cloudfront_distribution" "s3_distribution" {
-
+resource "aws_cloudfront_distribution" "mylearn" {
   enabled = true
   default_cache_behavior {
     allowed_methods        = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
@@ -36,18 +31,3 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     cloudfront_default_certificate = true
   }
 }
-
-resource "aws_s3_bucket" "host_bucket" {
-  bucket = "mylearn-host-bucket"
-
-  tags = {
-    AppName = "mylearn-app"
-  }
-}
-
-resource "aws_s3_bucket_acl" "b_acl" {
-  bucket = aws_s3_bucket.host_bucket.id
-  acl    = "private"
-}
-
-
