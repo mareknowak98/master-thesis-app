@@ -19,16 +19,16 @@
 
             <div>
               <label for="email1" class="block text-900 font-medium mb-2">Email</label>
-              <InputText id="email1" type="text" class="w-full mb-3" />
+              <InputText id="email1" v-model="email1" type="text" class="w-full mb-3" />
 
               <label for="password1" class="block text-900 font-medium mb-2">Password</label>
-              <InputText id="password1" type="password" class="w-full mb-3" />
+              <InputText id="password1" v-model="password1" type="password" class="w-full mb-3" />
 
               <div class="flex align-items-center justify-content-between mb-6">
                 <a class="font-medium no-underline ml-2 text-blue-500 text-right cursor-pointer">Forgot password?</a>
               </div>
 
-              <Button label="Sign In" icon="pi pi-lock" class="w-full"></Button>
+              <Button label="Sign In" icon="pi pi-lock" class="w-full" @click="onLogin" ></Button>
             </div>
           </div>
         </div>
@@ -42,6 +42,9 @@
 <script>
 import Checkbox from 'primevue/checkbox';
 import NavBar from "@/components/NavBar";
+import {ref} from 'vue'
+import axios from 'axios';
+import { TokenService } from "@/store/tokenService";
 
 export default {
   name: "Login",
@@ -49,11 +52,32 @@ export default {
     Checkbox,
     NavBar,
   },
-  props: {
-    msg: String,
-  },
+  setup() {
+    let email1 = ref('')
+    let password1 = ref('')
+
+    function onLogin() {
+      axios.post(process.env.VUE_APP_BACKEND_RESP_API + 'login', {
+        username: email1.value,
+        password: password1.value,
+      }).then(resp => {
+        TokenService.setToken(resp.data.accessToken)
+        email1.value = password1.value = ''
+      }).catch(err => {
+        alert(err)
+        email1.value = password1.value = ''
+      })
+    }
+
+    return {
+      email1,
+      password1,
+      onLogin
+    }
+  }
 };
+
+
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="less"></style>
