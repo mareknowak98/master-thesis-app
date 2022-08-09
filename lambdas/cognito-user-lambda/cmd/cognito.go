@@ -3,8 +3,10 @@ package cmd
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/cognitoidentityprovider"
+	"github.com/aws/aws-sdk-go-v2/service/cognitoidentityprovider/types"
 )
 
 func (c *Client) getUserToken(login UserLogin, clientId string) (UserLoginResponse, error) {
@@ -34,6 +36,48 @@ func (c *Client) getUserToken(login UserLogin, clientId string) (UserLoginRespon
 
 	resp.AccessToken = *auth.AuthenticationResult.AccessToken
 	resp.RefreshToken = *auth.AuthenticationResult.RefreshToken
+
+	return resp, nil
+}
+
+func (c *Client) registerUser(register UserRegister, clientId, userPoolId string) (UserRegisterResponse, error) {
+	resp := UserRegisterResponse{}
+
+	isRegistered, err := c.CognitoCl.SignUp(context.Background(), &cognitoidentityprovider.SignUpInput{
+		ClientId: aws.String(clientId),
+		Username: aws.String(register.Username),
+		Password: aws.String(register.Password1),
+		UserAttributes: []types.AttributeType{
+			{
+				Name:  aws.String("email"),
+				Value: aws.String(register.Email),
+			},
+		},
+	})
+	fmt.Printf("%#v\n", isRegistered)
+	if err != nil {
+		return resp, err
+	}
+
+	confirm, err := c.CognitoCl.AdminConfirmSignUp(context.Background(), &cognitoidentityprovider.AdminConfirmSignUpInput{
+		UserPoolId: aws.String(userPoolId),
+		Username:   aws.String(register.Username),
+	})
+	fmt.Printf("%#v\n", confirm)
+	if err != nil {
+		return resp, err
+	}
+
+	group, err := c.CognitoCl.AdminAddUserToGroup(context.Background(), &cognitoidentityprovider.AdminAddUserToGroupInput{
+		UserPoolId: aws.String(userPoolId),
+		Username:   aws.String(register.Username),
+		GroupName:  aws.String("student-group"),
+	})
+	fmt.Printf("%#v\n", group)
+
+	if err != nil {
+		return resp, err
+	}
 
 	return resp, nil
 }
