@@ -44,6 +44,7 @@ import Checkbox from 'primevue/checkbox';
 import NavBar from "@/components/NavBar";
 import {ref} from 'vue'
 import axios from 'axios';
+import { TokenService } from "@/store/tokenService";
 
 export default {
   name: "Login",
@@ -54,33 +55,29 @@ export default {
   setup() {
     let email1 = ref('')
     let password1 = ref('')
-    let accesToken = ref('')
 
     function onLogin() {
-      console.log(email1.value)
-      console.log(password1.value)
       axios.post(process.env.VUE_APP_BACKEND_RESP_API + 'login', {
         username: email1.value,
         password: password1.value,
       }).then(resp => {
-        console.log(resp)
-        accesToken.value = resp.accessToken
+        TokenService.setToken(resp.data.accessToken)
+        email1.value = password1.value = ''
+      }).catch(err => {
+        alert(err)
+        email1.value = password1.value = ''
       })
     }
 
     return {
       email1,
       password1,
-      accesToken,
       onLogin
     }
-
   }
-
 };
 
 
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="less"></style>
