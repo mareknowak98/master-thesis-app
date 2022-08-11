@@ -18,5 +18,5 @@ type UserRegister struct {
 }
 
 type UserRegisterResponse struct {
-	IsRegistered string `json:"isRegistered"`
+	Message string `json:"message"`
 }

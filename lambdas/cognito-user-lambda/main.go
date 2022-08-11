@@ -44,7 +44,6 @@ func HandleRequest(request events.APIGatewayProxyRequest) (events.APIGatewayProx
 		switch request.HTTPMethod {
 		case "POST":
 			resp, err := c.Register(request)
-			fmt.Printf("essa")
 			if err != nil {
 				return responseGenerator(500, err.Error()), nil
 			}

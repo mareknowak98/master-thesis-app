@@ -42,7 +42,11 @@ func (c *Client) getUserToken(login UserLogin, clientId string) (UserLoginRespon
 
 func (c *Client) registerUser(register UserRegister, clientId, userPoolId string) (UserRegisterResponse, error) {
 	resp := UserRegisterResponse{}
+	if register.Password1 != register.Password2 {
+		return resp, fmt.Errorf("Passwords are not equal")
+	}
 
+	// create user
 	isRegistered, err := c.CognitoCl.SignUp(context.Background(), &cognitoidentityprovider.SignUpInput{
 		ClientId: aws.String(clientId),
 		Username: aws.String(register.Username),
@@ -59,6 +63,7 @@ func (c *Client) registerUser(register UserRegister, clientId, userPoolId string
 		return resp, err
 	}
 
+	// confirm email automatically : TEMPORARY
 	confirm, err := c.CognitoCl.AdminConfirmSignUp(context.Background(), &cognitoidentityprovider.AdminConfirmSignUpInput{
 		UserPoolId: aws.String(userPoolId),
 		Username:   aws.String(register.Username),
@@ -68,6 +73,7 @@ func (c *Client) registerUser(register UserRegister, clientId, userPoolId string
 		return resp, err
 	}
 
+	// add new user to default student group
 	group, err := c.CognitoCl.AdminAddUserToGroup(context.Background(), &cognitoidentityprovider.AdminAddUserToGroupInput{
 		UserPoolId: aws.String(userPoolId),
 		Username:   aws.String(register.Username),

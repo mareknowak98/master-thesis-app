@@ -21,7 +21,11 @@ func getDebugInput() events.APIGatewayProxyRequest {
 	var request events.APIGatewayProxyRequest
 	_ = os.Setenv("USER_TABLE", "cognito-users")
 	_ = os.Setenv("REGION", "eu-central-1")
+	_ = os.Setenv("USER_POOL_ID", "eu-central-1_LsCgMRDvD")
 
+	m := make(map[string]string)
+	m["group"] = "student-group"
+	request.QueryStringParameters = m
 	request.HTTPMethod = "GET"
 	request.Path = "/users"
 	return request

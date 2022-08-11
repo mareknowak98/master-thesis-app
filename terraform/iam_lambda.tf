@@ -185,9 +185,13 @@ resource "aws_iam_role_policy" "mylearn_cognito_user" {
     Version = "2012-10-17"
     Statement = [
       {
-        "Effect" : "Allow",
-        "Action" : "cognito-idp:InitiateAuth",
-        "Resource" : "*"
+        "Effect" = "Allow",
+        "Action" = [
+            "cognito-idp:InitiateAuth",
+            "cognito-idp:AdminConfirmSignUp",
+            "cognito-idp:AdminAddUserToGroup"
+          ]
+        "Resource" = "*"
       }
     ]
   })
