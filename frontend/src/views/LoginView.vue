@@ -18,7 +18,7 @@
             </div>
 
             <div>
-              <label for="email1" class="block text-900 font-medium mb-2">Email</label>
+              <label for="email1" class="block text-900 font-medium mb-2">Username</label>
               <InputText id="email1" v-model="email1" type="text" class="w-full mb-3" />
 
               <label for="password1" class="block text-900 font-medium mb-2">Password</label>
@@ -45,6 +45,7 @@ import NavBar from "@/components/NavBar";
 import {ref} from 'vue'
 import axios from 'axios';
 import { TokenService } from "@/store/tokenService";
+import router from "@/router";
 
 export default {
   name: "Login",
@@ -63,6 +64,10 @@ export default {
       }).then(resp => {
         TokenService.setToken(resp.data.accessToken)
         email1.value = password1.value = ''
+      }).then(resp => {
+        let decodedToken = TokenService.decodeToken(TokenService.getToken())
+        console.log(decodedToken)
+        router.push({name: "mainView"})
       }).catch(err => {
         alert(err)
         email1.value = password1.value = ''

@@ -13,10 +13,16 @@
               </div>
               <div>
                 <label for="email1" class="block text-900 font-medium">Email</label>
-                <InputText id="email1" type="text" class="w-full mb-3" />
+                <InputText id="email1" type="email" class="w-full mb-3" />
+
+                <label for="username" class="block text-900 font-medium">Username</label>
+                <InputText id="username" type="text" class="w-full mb-3" />
 
                 <label for="password1" class="block text-900 font-medium mb-2">Password</label>
                 <InputText id="password1" type="password" class="w-full mb-3" />
+
+                <label for="password2" class="block text-900 font-medium mb-2">Repeat password</label>
+                <InputText id="password2" type="password" class="w-full mb-3" />
 
                 <Button label="Register" icon="pi pi-user-plus" class="w-full"></Button>
               </div>
@@ -32,6 +38,7 @@
 <script>
 import Checkbox from 'primevue/checkbox';
 import NavBar from "@/components/NavBar";
+import { ref } from "vue";
 
 export default {
   name: "Register",
@@ -39,8 +46,23 @@ export default {
     Checkbox,
     NavBar,
   },
-  props: {
-    msg: String,
+  setup() {
+    let email1 = ref('')
+    let username = ref('')
+    let password1 = ref('')
+    let password2 = ref('')
+
+    function onRegister() {
+
+    }
+
+    return {
+      email1,
+      username,
+      password1,
+      password2
+    }
+
   },
 };
 </script>
