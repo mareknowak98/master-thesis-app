@@ -3,6 +3,7 @@ import HomeView from "../views/HomeView.vue";
 import LoginView from "@/views/LoginView";
 import RegisterView from "@/views/RegisterView";
 import MainView from "@/views/MainView";
+import GradeBookView from "@/views/GradeBookView";
 
 const routes = [
   {
@@ -24,6 +25,11 @@ const routes = [
     path: "/mainView",
     name: "mainView",
     component: MainView,
+  },
+  {
+    path: "/gradeBook",
+    name: "gradeBook",
+    component: GradeBookView,
   },
 ];
 

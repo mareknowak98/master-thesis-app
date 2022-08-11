@@ -1,12 +1,9 @@
 <template>
-  <LoggedNavbar/>
-  <div>
-    <div v-if="this.group == 'teacher-group'">
-      <TeacherMenu/>
-    </div>
-    <div v-if="this.group == 'student-group'">
-      <StudentMenu/>
-    </div>
+  <div v-if="this.decodedToken != null">
+    <TabMenu class="myMenu" :model="items" />
+  </div>
+  <div v-else>
+    <h1>Log in to use website.</h1>
   </div>
 </template>
 
@@ -14,22 +11,15 @@
 
 <script>
 
-import TeacherMenu from "@/components/TeacherMenu";
-import StudentMenu from "@/components/StudentMenu";
-import LoggedNavbar from "@/components/LoggedNavbar";
-
 import { ref, onMounted } from "vue";
 import { TokenService } from "@/store/tokenService";
 import TabMenu from 'primevue/tabmenu';
 import router from "@/router";
 
 export default {
-  name: "MainView",
+  name: "LoggedNavbar",
   components: {
-    TeacherMenu,
-    StudentMenu,
-    LoggedNavbar,
-    TabMenu
+    TabMenu,
   },
   data() {
     return {
@@ -67,5 +57,14 @@ export default {
 </script>
 
 <style lang="scss">
+
+.myMenu {
+
+  .p-tabmenu-nav {
+    padding-left: 40%;
+
+  }
+}
+
 
 </style>

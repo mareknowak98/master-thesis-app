@@ -11,6 +11,9 @@ const TokenService = {
   },
   setToken(token) {
     return localStorage.setItem(TOKEN_KEY, token);
+  },
+  deleteToken() {
+    localStorage.removeItem(TOKEN_KEY)
   }
 }
 
