@@ -92,6 +92,14 @@ resource "aws_lambda_permission" "mylearn_users" {
   source_arn = "${aws_api_gateway_rest_api.mylearn.execution_arn}/*/*"
 }
 
+module "cors3" {
+  source = "squidfunk/api-gateway-enable-cors/aws"
+  version = "0.3.3"
+
+  api_id          = aws_api_gateway_rest_api.mylearn.id
+  api_resource_id = aws_api_gateway_resource.mylearn_users.id
+}
+
 ##########################################
 # chat service endpoints
 resource "aws_api_gateway_resource" "mylearn_rest_chat" {
