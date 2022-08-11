@@ -164,6 +164,11 @@ resource "aws_iam_role_policy" "mylearn_users" {
         "Effect"   = "Allow",
         "Action"   = "dynamodb:Scan",
         "Resource" = aws_dynamodb_table.cognito_users.arn
+      },
+      {
+        "Effect"   = "Allow",
+        "Action"   = "cognito-idp:ListUsersInGroup",
+        "Resource" = "*"
       }
     ]
   })
@@ -185,9 +190,13 @@ resource "aws_iam_role_policy" "mylearn_cognito_user" {
     Version = "2012-10-17"
     Statement = [
       {
-        "Effect" : "Allow",
-        "Action" : "cognito-idp:InitiateAuth",
-        "Resource" : "*"
+        "Effect" = "Allow",
+        "Action" = [
+            "cognito-idp:InitiateAuth",
+            "cognito-idp:AdminConfirmSignUp",
+            "cognito-idp:AdminAddUserToGroup"
+          ]
+        "Resource" = "*"
       }
     ]
   })

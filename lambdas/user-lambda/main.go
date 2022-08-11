@@ -11,6 +11,10 @@ func responseGenerator(code int, message string) events.APIGatewayProxyResponse 
 	var resp events.APIGatewayProxyResponse
 	resp.StatusCode = code
 	resp.Body = message
+	headers := make(map[string]string)
+	headers["Content-Type"] = "application/json"
+	headers["Access-Control-Allow-Origin"] = "*"
+	resp.Headers = headers
 	return resp
 }
 

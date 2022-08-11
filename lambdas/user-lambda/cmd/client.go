@@ -3,6 +3,7 @@ package cmd
 import (
 	"context"
 	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/cognitoidentityprovider"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"strings"
 )
@@ -14,7 +15,8 @@ const (
 // AWS client
 
 type Client struct {
-	DynamoCl *dynamodb.Client
+	DynamoCl  *dynamodb.Client
+	CognitoCl *cognitoidentityprovider.Client
 }
 
 func NewClient(region string) *Client {
@@ -29,6 +31,7 @@ func NewClient(region string) *Client {
 
 	// Return new client
 	return &Client{
-		DynamoCl: dynamodb.NewFromConfig(cfg),
+		DynamoCl:  dynamodb.NewFromConfig(cfg),
+		CognitoCl: cognitoidentityprovider.NewFromConfig(cfg),
 	}
 }

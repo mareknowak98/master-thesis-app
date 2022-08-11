@@ -7,6 +7,7 @@ type InputUsers struct {
 	Username  string `json:"Username"`
 	Email     string `json:"Email"`
 	CreatedAt string `json:"CreatedAt"`
+	UserGroup string `json:"UserGroup"`
 }
 
 type CognitoEventRequest struct {

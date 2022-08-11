@@ -12,6 +12,10 @@ func responseGenerator(code int, message string) events.APIGatewayProxyResponse 
 	var resp events.APIGatewayProxyResponse
 	resp.StatusCode = code
 	resp.Body = message
+	headers := make(map[string]string)
+	headers["Content-Type"] = "application/json"
+	headers["Access-Control-Allow-Origin"] = "*"
+	resp.Headers = headers
 	return resp
 }
 
@@ -33,6 +37,17 @@ func HandleRequest(request events.APIGatewayProxyRequest) (events.APIGatewayProx
 			}
 			return responseGenerator(200, resp), nil
 
+		default:
+			return responseGenerator(400, "No such method"), nil
+		}
+	case "/register":
+		switch request.HTTPMethod {
+		case "POST":
+			resp, err := c.Register(request)
+			if err != nil {
+				return responseGenerator(500, err.Error()), nil
+			}
+			return responseGenerator(200, resp), nil
 		default:
 			return responseGenerator(400, "No such method"), nil
 		}

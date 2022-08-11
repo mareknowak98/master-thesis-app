@@ -141,6 +141,8 @@ resource "aws_lambda_function" "user_lambda" {
     variables = {
       REGION     = var.region
       USER_TABLE = aws_dynamodb_table.cognito_users.name
+      USER_POOL_ID      = aws_cognito_user_pool.mylearn.id
+      COGNITO_CLIENT_ID = aws_cognito_user_pool_client.webapp.id
     }
   }
 }
