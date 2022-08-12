@@ -7,7 +7,7 @@
           <div class="grid grid-nogutter surface-section text-800">
             <div class="col-12 md:col-6 p-0 text-center md:text-left flex align-items-center ">
               <section>
-                <span class="block text-6xl font-bold mb-1">Create the lessons and manage tour class</span>
+                <span class="block text-6xl font-bold mb-1">Create the lessons and manage your class</span>
                 <div class="text-6xl text-primary font-bold mb-3">without any problems</div>
                 <p class="mt-0 mb-4 text-700 line-height-3">A portal built entirely on AWS cloud services. (not only EC2) </p>
 
