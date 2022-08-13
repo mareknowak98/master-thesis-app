@@ -20,7 +20,6 @@
     </tbody>
   </table>
   <h2>-------------------</h2>
-  <h3>{{websocket_msg}}</h3>
 
   <InputText type="text" v-model="msg" />
   <Button @click="sendMessage" label="Send message" />
@@ -63,15 +62,16 @@ export default {
         const params = new URLSearchParams({
           token: token.value
         }).toString()
-        console.log(process.env.VUE_APP_WEBSOCKET_CHAT_API + '?' + params)
         socket.value = new WebSocket(process.env.VUE_APP_WEBSOCKET_CHAT_API + '?' + params)
         socket.value.onmessage = (m) => {
           websocket_msg.value = JSON.parse(m.data)
-          rest_messages.value.push({
-            userFromTo: websocket_msg.value.payload.from + ":" + websocket_msg.value.payload.to,
-            timestamp: "",
-            message: websocket_msg.value.payload.message
-          })
+          if (websocket_msg.value.payload.from === userid.value){
+            rest_messages.value.push({
+              userFromTo: websocket_msg.value.payload.from + ":" + websocket_msg.value.payload.to,
+              timestamp: "",
+              message: websocket_msg.value.payload.message
+            })
+          }
         }
 
       } catch (e) {
