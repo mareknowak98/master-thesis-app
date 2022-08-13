@@ -24,7 +24,7 @@ func getDebugInput() events.APIGatewayProxyRequest {
 	_ = os.Setenv("USER_POOL_ID", "eu-central-1_LsCgMRDvD")
 
 	m := make(map[string]string)
-	m["group"] = "student-group"
+	m["group"] = "all"
 	request.QueryStringParameters = m
 	request.HTTPMethod = "GET"
 	request.Path = "/users"

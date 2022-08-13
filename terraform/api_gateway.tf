@@ -134,6 +134,14 @@ resource "aws_lambda_permission" "mylearn_rest_chat" {
   source_arn = "${aws_api_gateway_rest_api.mylearn.execution_arn}/*/*"
 }
 
+module "cors5" {
+  source = "squidfunk/api-gateway-enable-cors/aws"
+  version = "0.3.3"
+
+  api_id          = aws_api_gateway_rest_api.mylearn.id
+  api_resource_id = aws_api_gateway_resource.mylearn_rest_chat.id
+}
+
 ##########################################
 # cognito users management service endpoints
 resource "aws_api_gateway_resource" "mylearn_cognito_users_login" {
@@ -258,6 +266,7 @@ resource "aws_api_gateway_deployment" "mylearn" {
     aws_api_gateway_integration.mylearn_grades_post,
     aws_api_gateway_integration.mylearn_users_get,
     aws_api_gateway_integration.mylearn_cognito_users_login_post,
+    aws_api_gateway_integration.mylearn_rest_chat_get,
   ]
 }
 

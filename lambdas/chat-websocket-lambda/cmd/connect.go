@@ -14,7 +14,9 @@ import (
 // Connect will receive the $connect request
 // It will handle the authorization also
 func Connect(request APIGatewayWebsocketProxyRequest) (events.APIGatewayProxyResponse, error) {
-	parsedToken, err := DecodeToken(request.Headers["Authorization"])
+	//parsedToken, err := DecodeToken(request.Headers["Authorization"])
+	parsedToken, err := DecodeToken(request.QueryStringParameters["token"])
+
 	if err != nil {
 		fmt.Println("eror")
 		fmt.Println(err)
