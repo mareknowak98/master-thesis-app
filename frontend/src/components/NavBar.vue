@@ -1,10 +1,5 @@
 <template>
   <div class="navbar">
-    <h1>Env variable: |{{VUE_APP_BACKEND_RESP_API}}|</h1>
-    <h1>custom variable: |{{VUE_APP_BACKEND_ECS}}|</h1>
-
-
-    <h3>Start Page</h3>
     <TabMenu :model="items" />
     <router-view/>
   </div>

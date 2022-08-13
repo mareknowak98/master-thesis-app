@@ -2,6 +2,11 @@ import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import LoginView from "@/views/LoginView";
 import RegisterView from "@/views/RegisterView";
+import MainView from "@/views/MainView";
+import GradeBookView from "@/views/GradeBookView";
+import ChatUserListView from "@/views/ChatUserListView";
+import ChatWithUserView from "@/views/ChatWithUserView";
+
 
 const routes = [
   {
@@ -18,6 +23,26 @@ const routes = [
     path: "/register",
     name: "register",
     component: RegisterView,
+  },
+  {
+    path: "/mainView",
+    name: "mainView",
+    component: MainView,
+  },
+  {
+    path: "/gradeBook",
+    name: "gradeBook",
+    component: GradeBookView,
+  },
+  {
+    path: "/chatList",
+    name: "chatList",
+    component: ChatUserListView,
+  },
+  {
+    path: "/chatUser/:userId",
+    name: "chatUser",
+    component: ChatWithUserView,
   },
 ];
 
