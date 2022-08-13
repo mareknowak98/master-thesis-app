@@ -167,7 +167,10 @@ resource "aws_iam_role_policy" "mylearn_users" {
       },
       {
         "Effect"   = "Allow",
-        "Action"   = "cognito-idp:ListUsersInGroup",
+        "Action"   = [
+          "cognito-idp:ListUsersInGroup",
+          "cognito-idp:ListUsers",
+        ]
         "Resource" = "*"
       }
     ]

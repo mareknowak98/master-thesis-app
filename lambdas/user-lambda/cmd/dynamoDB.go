@@ -19,11 +19,48 @@ func (c *Client) GetUsers(request events.APIGatewayProxyRequest, tableName strin
 		return "", fmt.Errorf("bad query string parameter\n")
 	}
 
+	if request.QueryStringParameters["group"] == "all" {
+		resp, err := c.GetAllUsers()
+		if err != nil {
+			return "", err
+		}
+		return resp, nil
+	}
+
 	resp, err := c.GetGroupUsers(request.QueryStringParameters["group"])
 	if err != nil {
 		return "", err
 	}
 	return resp, nil
+}
+
+func (c *Client) GetAllUsers() (string, error) {
+	var userList []OutputUsers
+
+	userPoolID := os.Getenv("USER_POOL_ID")
+
+	usersInGroup, err := c.CognitoCl.ListUsers(context.Background(), &cognitoidentityprovider.ListUsersInput{
+		UserPoolId: aws.String(userPoolID),
+	})
+
+	if err != nil {
+		return "", err
+	}
+
+	for _, element := range usersInGroup.Users {
+		var tmp OutputUsers
+		tmp.Username = *element.Username
+		tmp.Email = *(element.Attributes[2].Value)
+		userList = append(userList, tmp)
+	}
+
+	//Marshall to json format
+	jsonOut, err := json.Marshal(userList)
+
+	if err != nil {
+		return "", err
+	}
+	return string(jsonOut), nil
 }
 
 func (c *Client) GetGroupUsers(groupName string) (string, error) {
