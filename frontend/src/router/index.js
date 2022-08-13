@@ -4,6 +4,9 @@ import LoginView from "@/views/LoginView";
 import RegisterView from "@/views/RegisterView";
 import MainView from "@/views/MainView";
 import GradeBookView from "@/views/GradeBookView";
+import ChatUserListView from "@/views/ChatUserListView";
+import ChatWithUserView from "@/views/ChatWithUserView";
+
 
 const routes = [
   {
@@ -30,6 +33,16 @@ const routes = [
     path: "/gradeBook",
     name: "gradeBook",
     component: GradeBookView,
+  },
+  {
+    path: "/chatList",
+    name: "chatList",
+    component: ChatUserListView,
+  },
+  {
+    path: "/chatUser/:userId",
+    name: "chatUser",
+    component: ChatWithUserView,
   },
 ];
 

@@ -1,10 +1,10 @@
 <template>
-  <div v-if="this.decodedToken != null">
+<!--  <div v-if="this.decodedToken != null">-->
     <TabMenu class="myMenu" :model="items" />
-  </div>
-  <div v-else>
-    <h1>Log in to use website.</h1>
-  </div>
+<!--  </div>-->
+<!--  <div v-else>-->
+<!--    <h1>Log in to use website.</h1>-->
+<!--  </div>-->
 </template>
 
 
