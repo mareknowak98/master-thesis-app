@@ -23,10 +23,10 @@ resource "aws_dynamodb_table" "mylearn_grades" {
 resource "aws_dynamodb_table" "cognito_users" {
   name         = "cognito-users"
   billing_mode = "PAY_PER_REQUEST"
-  hash_key     = "UserId"
+  hash_key     = "Username"
 
   attribute {
-    name = "UserId"
+    name = "Username"
     type = "S"
   }
 
@@ -63,6 +63,21 @@ resource "aws_dynamodb_table" "chat_messages" {
 
   attribute {
     name = "Timestamp"
+    type = "S"
+  }
+
+  tags = {
+    AppName = "mylearn-app"
+  }
+}
+
+resource "aws_dynamodb_table" "mylearn_classes" {
+  name         = "mylearn-classes"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "UserClass"
+
+  attribute {
+    name = "UserClass"
     type = "S"
   }
 

@@ -161,16 +161,21 @@ resource "aws_iam_role_policy" "mylearn_users" {
     Version = "2012-10-17"
     Statement = [
       {
-        "Effect"   = "Allow",
-        "Action"   = "dynamodb:Scan",
-        "Resource" = aws_dynamodb_table.cognito_users.arn
+        "Effect" = "Allow",
+        "Action" = [
+          "dynamodb:PutItem",
+          "dynamodb:DeleteItem",
+          "dynamodb:Scan",
+          "dynamodb:UpdateItem",
+        ],
+        "Resource" = aws_dynamodb_table.mylearn_classes.arn
       },
       {
-        "Effect"   = "Allow",
-        "Action"   = [
+        "Effect" = "Allow",
+        "Action" = [
           "cognito-idp:ListUsersInGroup",
           "cognito-idp:ListUsers",
-        ]
+        ],
         "Resource" = "*"
       }
     ]
@@ -195,10 +200,10 @@ resource "aws_iam_role_policy" "mylearn_cognito_user" {
       {
         "Effect" = "Allow",
         "Action" = [
-            "cognito-idp:InitiateAuth",
-            "cognito-idp:AdminConfirmSignUp",
-            "cognito-idp:AdminAddUserToGroup"
-          ]
+          "cognito-idp:InitiateAuth",
+          "cognito-idp:AdminConfirmSignUp",
+          "cognito-idp:AdminAddUserToGroup"
+        ]
         "Resource" = "*"
       }
     ]

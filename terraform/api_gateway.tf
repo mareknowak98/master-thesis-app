@@ -93,7 +93,7 @@ resource "aws_lambda_permission" "mylearn_users" {
 }
 
 module "cors3" {
-  source = "squidfunk/api-gateway-enable-cors/aws"
+  source  = "squidfunk/api-gateway-enable-cors/aws"
   version = "0.3.3"
 
   api_id          = aws_api_gateway_rest_api.mylearn.id
@@ -135,7 +135,7 @@ resource "aws_lambda_permission" "mylearn_rest_chat" {
 }
 
 module "cors5" {
-  source = "squidfunk/api-gateway-enable-cors/aws"
+  source  = "squidfunk/api-gateway-enable-cors/aws"
   version = "0.3.3"
 
   api_id          = aws_api_gateway_rest_api.mylearn.id
@@ -158,10 +158,10 @@ resource "aws_api_gateway_method" "mylearn_cognito_users_login_post" {
 }
 
 resource "aws_api_gateway_method_response" "mylearn_cognito_users_login_post_200" {
-  rest_api_id   = aws_api_gateway_rest_api.mylearn.id
-  resource_id   = aws_api_gateway_resource.mylearn_cognito_users_login.id
-  http_method   = aws_api_gateway_method.mylearn_cognito_users_login_post.http_method
-  status_code   = "200"
+  rest_api_id = aws_api_gateway_rest_api.mylearn.id
+  resource_id = aws_api_gateway_resource.mylearn_cognito_users_login.id
+  http_method = aws_api_gateway_method.mylearn_cognito_users_login_post.http_method
+  status_code = "200"
   response_models = {
     "application/json" = "Empty"
   }
@@ -178,7 +178,7 @@ resource "aws_api_gateway_integration" "mylearn_cognito_users_login_post" {
 
 
 module "cors" {
-  source = "squidfunk/api-gateway-enable-cors/aws"
+  source  = "squidfunk/api-gateway-enable-cors/aws"
   version = "0.3.3"
 
   api_id          = aws_api_gateway_rest_api.mylearn.id
@@ -201,10 +201,10 @@ resource "aws_api_gateway_method" "mylearn_cognito_users_register_post" {
 }
 
 resource "aws_api_gateway_method_response" "mylearn_cognito_users_register_post_200" {
-  rest_api_id   = aws_api_gateway_rest_api.mylearn.id
-  resource_id   = aws_api_gateway_resource.mylearn_cognito_users_register.id
-  http_method   = aws_api_gateway_method.mylearn_cognito_users_register_post.http_method
-  status_code   = "200"
+  rest_api_id = aws_api_gateway_rest_api.mylearn.id
+  resource_id = aws_api_gateway_resource.mylearn_cognito_users_register.id
+  http_method = aws_api_gateway_method.mylearn_cognito_users_register_post.http_method
+  status_code = "200"
   response_models = {
     "application/json" = "Empty"
   }
@@ -221,7 +221,7 @@ resource "aws_api_gateway_integration" "mylearn_cognito_users_register_post" {
 
 
 module "cors2" {
-  source = "squidfunk/api-gateway-enable-cors/aws"
+  source  = "squidfunk/api-gateway-enable-cors/aws"
   version = "0.3.3"
 
   api_id          = aws_api_gateway_rest_api.mylearn.id

@@ -6,7 +6,10 @@ import (
 	"fmt"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/cognitoidentityprovider"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	"os"
 )
 
@@ -92,61 +95,183 @@ func (c *Client) GetGroupUsers(groupName string) (string, error) {
 	return string(jsonOut), nil
 }
 
-//func (c *Client) GetUsers(request events.APIGatewayProxyRequest, tableName string) (string, error) {
-//	fmt.Println(request.QueryStringParameters)
-//
-//	users, err := c.getAllItems(context.Background(), tableName)
-//	// Parse response to Json
-//	resp, err := parseDynamoToUsers(users)
-//	if err != nil {
-//		return "", err
-//	}
-//	return resp, nil
-//}
-//
-//// Scan all items in DynamoDB table
-//// WARNING: can be very slow, do not use on large tables
-//// TODO: Add batching (max limit of scan output is 1MB)
-//func (c *Client) getAllItems(context context.Context, tableName string) (dynamodb.ScanOutput, error) {
-//	out, err := c.DynamoCl.Scan(context, &dynamodb.ScanInput{
-//		TableName: aws.String(tableName),
-//	})
-//	if err != nil {
-//		return dynamodb.ScanOutput{}, err
-//	}
-//
-//	return *out, nil
-//}
-//
-//// Parse DynamoDB response to json
-//func parseDynamoToUsers(out dynamodb.ScanOutput) (string, error) {
-//	var items []OutputUsers
-//
-//	// Unmarshall list of Maps to OutputUsers structure
-//	err := attributevalue.UnmarshalListOfMaps(out.Items, &items)
-//
-//	//Marshall to json format
-//	jsonOut, err := json.Marshal(items)
-//
-//	if err != nil {
-//		return "", err
-//	}
-//	return string(jsonOut), nil
-//}
+// GetClasses Function return list of classes
+func (c *Client) GetClasses(request events.APIGatewayProxyRequest) (string, error) {
+	tableName := os.Getenv("CLASS_TABLE")
 
-// TODO for later
-//// QueryDynamo Query dynamoDB.go only with hashkey
-//func (c *Client) QueryDynamo(context context.Context, tableName string, hashKeyName string, hashKeyValue string) (dynamodb.QueryOutput, error) {
-//	out, err := c.DynamoCl.Query(context, &dynamodb.QueryInput{
-//		TableName:              aws.String(tableName),
-//		KeyConditionExpression: aws.String(fmt.Sprintf("%s = :hashKey", hashKeyName)),
-//		ExpressionAttributeValues: map[string]types.AttributeValue{
-//			":hashKey": &types.AttributeValueMemberS{Value: hashKeyValue},
-//		},
-//	})
-//	if err != nil {
-//		return *out, err
-//	}
-//
-//	return *out, nil
-//}
+	scanOutput, err := c.DynamoCl.Scan(context.Background(), &dynamodb.ScanInput{
+		TableName:       aws.String(tableName),
+		AttributesToGet: []string{"UserClass"},
+	})
+
+	if err != nil {
+		return "", err
+	}
+
+	var classL []map[string]string
+	//Unmarshall response to list of maps
+	err = attributevalue.UnmarshalListOfMaps(scanOutput.Items, &classL)
+
+	var classList []string
+	for _, element := range classL {
+		classList = append(classList, element["UserClass"])
+	}
+
+	//Marshall to json format
+	jsonOut, err := json.Marshal(classList)
+
+	if err != nil {
+		return "", err
+	}
+
+	return string(jsonOut), nil
+}
+
+// SetClasses Function add new class to table
+func (c *Client) SetClasses(request events.APIGatewayProxyRequest) (string, error) {
+	var class AddClassInput
+	tableName := os.Getenv("CLASS_TABLE")
+	err := json.Unmarshal([]byte(request.Body), &class)
+	if err != nil {
+		return "", err
+	}
+	// Marshall each element to 'map[string]types.AttributeValue' format
+	av, err := attributevalue.MarshalMap(class)
+	if err != nil {
+		return "", err
+	}
+
+	_, err = c.DynamoCl.PutItem(context.Background(), &dynamodb.PutItemInput{
+		TableName: aws.String(tableName),
+		Item:      av,
+	})
+
+	if err != nil {
+		return "", err
+	}
+
+	return "OK", nil
+}
+
+// DeleteClasses Function delete class from table
+func (c *Client) DeleteClasses(request events.APIGatewayProxyRequest) (string, error) {
+	var class AddClassInput
+	tableName := os.Getenv("CLASS_TABLE")
+	err := json.Unmarshal([]byte(request.Body), &class)
+	if err != nil {
+		return "", err
+	}
+
+	// Marshall each element to 'map[string]types.AttributeValue' format
+	av, err := attributevalue.MarshalMap(class)
+	if err != nil {
+		return "", err
+	}
+
+	_, err = c.DynamoCl.DeleteItem(context.Background(), &dynamodb.DeleteItemInput{
+		TableName: aws.String(tableName),
+		Key:       av,
+	})
+
+	return "OK", nil
+}
+
+// QueryDynamo Query dynamoDB.go only with hashkey
+func (c *Client) QueryDynamo(context context.Context, tableName string, hashKeyValue string) (dynamodb.QueryOutput, error) {
+	out, err := c.DynamoCl.Query(context, &dynamodb.QueryInput{
+		TableName:              aws.String(tableName),
+		KeyConditionExpression: aws.String("UserClass = :hashKey"),
+		ExpressionAttributeValues: map[string]types.AttributeValue{
+			":hashKey": &types.AttributeValueMemberS{Value: hashKeyValue},
+		},
+	})
+	if err != nil {
+		return *out, err
+	}
+
+	return *out, nil
+}
+
+//TODO use UpdateItem
+func (c *Client) AddUserToClass(request events.APIGatewayProxyRequest) (string, error) {
+	var input AddUserInput
+	tableName := os.Getenv("CLASS_TABLE")
+	err := json.Unmarshal([]byte(request.Body), &input)
+	if err != nil {
+		return "", err
+	}
+
+	currentClassMembers, err := c.QueryDynamo(context.Background(), tableName, input.UserClass)
+	if err != nil {
+		return "", err
+	}
+
+	var userList []string
+	//Unmarshall response to list
+	err = attributevalue.Unmarshal(currentClassMembers.Items[0]["UserList"], &userList)
+	if err != nil {
+		return "", err
+	}
+	userList = append(userList, input.Username)
+	var dynamoRecord ClassRecord
+	dynamoRecord.UserClass = input.UserClass
+	dynamoRecord.UserList = userList
+	// Marshall each element to 'map[string]types.AttributeValue' format
+	av, err := attributevalue.MarshalMap(dynamoRecord)
+	if err != nil {
+		return "", err
+	}
+
+	_, err = c.DynamoCl.PutItem(context.Background(), &dynamodb.PutItemInput{
+		TableName: aws.String(tableName),
+		Item:      av,
+	})
+
+	return "OK", nil
+}
+
+//TODO use UpdateItem
+func (c *Client) DeleteUserFromClass(request events.APIGatewayProxyRequest) (string, error) {
+	var input AddUserInput
+	tableName := os.Getenv("CLASS_TABLE")
+	err := json.Unmarshal([]byte(request.Body), &input)
+	if err != nil {
+		return "", err
+	}
+
+	currentClassMembers, err := c.QueryDynamo(context.Background(), tableName, input.UserClass)
+	if err != nil {
+		return "", err
+	}
+
+	var userList []string
+	//Unmarshall response to list
+	err = attributevalue.Unmarshal(currentClassMembers.Items[0]["UserList"], &userList)
+	if err != nil {
+		return "", err
+	}
+
+	// Find and remove "two"
+	for i, v := range userList {
+		if v == input.Username {
+			userList = append(userList[:i], userList[i+1:]...)
+			break
+		}
+	}
+
+	var dynamoRecord ClassRecord
+	dynamoRecord.UserClass = input.UserClass
+	dynamoRecord.UserList = userList
+	// Marshall each element to 'map[string]types.AttributeValue' format
+	av, err := attributevalue.MarshalMap(dynamoRecord)
+	if err != nil {
+		return "", err
+	}
+
+	_, err = c.DynamoCl.PutItem(context.Background(), &dynamodb.PutItemInput{
+		TableName: aws.String(tableName),
+		Item:      av,
+	})
+
+	return "OK", nil
+}

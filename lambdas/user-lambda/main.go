@@ -37,6 +37,48 @@ func HandleRequest(request events.APIGatewayProxyRequest) (events.APIGatewayProx
 		default:
 			return responseGenerator(400, "No such method"), nil
 		}
+	case "/classes":
+		switch request.HTTPMethod {
+		case "GET":
+			resp, err := c.GetClasses(request)
+			if err != nil {
+				return responseGenerator(500, err.Error()), nil
+			}
+			return responseGenerator(200, resp), nil
+		case "POST":
+			resp, err := c.SetClasses(request)
+			if err != nil {
+				return responseGenerator(500, err.Error()), nil
+			}
+			return responseGenerator(200, resp), nil
+		case "DELETE":
+			resp, err := c.DeleteClasses(request)
+			if err != nil {
+				return responseGenerator(500, err.Error()), nil
+			}
+			return responseGenerator(200, resp), nil
+		default:
+			return responseGenerator(400, "No such method"), nil
+		}
+
+	case "/classUsers":
+		switch request.HTTPMethod {
+		case "POST":
+			resp, err := c.AddUserToClass(request)
+			if err != nil {
+				return responseGenerator(500, err.Error()), nil
+			}
+			return responseGenerator(200, resp), nil
+		case "DELETE":
+			resp, err := c.DeleteUserFromClass(request)
+			if err != nil {
+				return responseGenerator(500, err.Error()), nil
+			}
+			return responseGenerator(200, resp), nil
+
+		default:
+			return responseGenerator(400, "No such method"), nil
+		}
 	default:
 		return responseGenerator(400, "No such endpoint"), nil
 	}
