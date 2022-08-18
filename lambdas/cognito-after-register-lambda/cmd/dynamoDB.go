@@ -19,7 +19,7 @@ func (c *Client) SaveUser(request CognitoEventRequest, tableName string) error {
 	user.Username = request.Username
 	user.Email = request.Request["userAttributes"]["email"]
 	user.UserGroup = "student-group"
-	user.UserGroup = ""
+	user.UserClass = ""
 
 	// Get current date and attach it to struct
 	dt := time.Now()

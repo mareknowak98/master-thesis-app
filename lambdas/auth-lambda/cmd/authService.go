@@ -9,13 +9,16 @@ import (
 // data is stored in map of maps for better performance (comparing e.g. to read from json file) o
 func IsAllowed(method string, userGroup string) bool {
 	permissions := map[string]map[string]bool{
-		"GET/grades":     map[string]bool{"teacher-group": true, "student-group": true, "parent-group": true, "admin-group": true},
-		"POST/grades":    map[string]bool{"teacher-group": true},
-		"GET/users":      map[string]bool{"teacher-group": true, "student-group": true, "parent-group": true, "admin-group": true},
-		"GET/messages":   map[string]bool{"teacher-group": true, "student-group": true, "parent-group": true, "admin-group": true},
-		"GET/classes":    map[string]bool{"teacher-group": true},
-		"POST/classes":   map[string]bool{"teacher-group": true},
-		"DELETE/classes": map[string]bool{"teacher-group": true},
+		"GET/grades":        map[string]bool{"teacher-group": true, "student-group": true, "parent-group": true, "admin-group": true},
+		"POST/grades":       map[string]bool{"teacher-group": true},
+		"GET/users":         map[string]bool{"teacher-group": true, "student-group": true, "parent-group": true, "admin-group": true},
+		"GET/messages":      map[string]bool{"teacher-group": true, "student-group": true, "parent-group": true, "admin-group": true},
+		"GET/classes":       map[string]bool{"teacher-group": true},
+		"POST/classes":      map[string]bool{"teacher-group": true},
+		"DELETE/classes":    map[string]bool{"teacher-group": true},
+		"GET/classUsers":    map[string]bool{"teacher-group": true, "student-group": true, "parent-group": true, "admin-group": true},
+		"POST/classUsers":   map[string]bool{"teacher-group": true},
+		"DELETE/classUsers": map[string]bool{"teacher-group": true},
 	}
 
 	if endpointPerm, ok := permissions[method]; ok {

@@ -216,6 +216,7 @@ func (c *Client) AddUserToClass(request events.APIGatewayProxyRequest) (string, 
 	var dynamoRecord ClassRecord
 	dynamoRecord.UserClass = input.UserClass
 	dynamoRecord.UserList = userList
+
 	// Marshall each element to 'map[string]types.AttributeValue' format
 	av, err := attributevalue.MarshalMap(dynamoRecord)
 	if err != nil {
@@ -226,6 +227,11 @@ func (c *Client) AddUserToClass(request events.APIGatewayProxyRequest) (string, 
 		TableName: aws.String(tableName),
 		Item:      av,
 	})
+
+	err = c.updateUserClass(input.Username, input.UserClass)
+	if err != nil {
+		return "", err
+	}
 
 	return "OK", nil
 }
@@ -272,6 +278,112 @@ func (c *Client) DeleteUserFromClass(request events.APIGatewayProxyRequest) (str
 		TableName: aws.String(tableName),
 		Item:      av,
 	})
+	if err != nil {
+		return "", err
+	}
+
+	err = c.updateUserClass(input.Username, "")
+	if err != nil {
+		return "", err
+	}
 
 	return "OK", nil
+}
+
+func (c *Client) updateUserClass(username, class string) error {
+	tableName := os.Getenv("USER_TABLE")
+	_, err := c.DynamoCl.UpdateItem(context.Background(), &dynamodb.UpdateItemInput{
+		TableName: aws.String(tableName),
+		Key: map[string]types.AttributeValue{
+			"Username": &types.AttributeValueMemberS{Value: username},
+		},
+		UpdateExpression: aws.String("set UserClass = :UserClass"),
+		ExpressionAttributeValues: map[string]types.AttributeValue{
+			":UserClass": &types.AttributeValueMemberS{Value: class},
+		},
+	})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (c *Client) GetUsersFromClass(request events.APIGatewayProxyRequest) (string, error) {
+	tableName := os.Getenv("CLASS_TABLE")
+	if len(request.QueryStringParameters) == 0 {
+		return "", fmt.Errorf("not enough parameters\n")
+	}
+
+	if request.QueryStringParameters["class"] == "" {
+		return "", fmt.Errorf("bad query string parameter\n")
+	}
+
+	currentClassMembers, err := c.QueryDynamo(context.Background(), tableName, request.QueryStringParameters["class"])
+	if err != nil {
+		return "", err
+	}
+
+	var userList []string
+	//Unmarshall response to list
+	err = attributevalue.Unmarshal(currentClassMembers.Items[0]["UserList"], &userList)
+	if err != nil {
+		return "", err
+	}
+
+	return "", nil
+}
+
+func (c *Client) GetMe(request events.APIGatewayProxyRequest) (string, error) {
+	if len(request.QueryStringParameters) == 0 {
+		return "", fmt.Errorf("not enough parameters\n")
+	}
+
+	if request.QueryStringParameters["info"] == "class" {
+		return c.GetUserClass(request)
+	}
+
+	return "", fmt.Errorf("error")
+}
+
+func (c *Client) GetUserClass(request events.APIGatewayProxyRequest) (string, error) {
+	tableName := os.Getenv("USER_TABLE")
+
+	decodedToken, err := DecodeToken(request.Headers["Authorization"])
+	if err != nil {
+		return "Token malformed", err
+	}
+	//User sending request
+	requestUser := decodedToken["username"]
+	fmt.Println(requestUser)
+
+	userInfo, err := c.QueryDynamoUsers(context.Background(), tableName, fmt.Sprintf("%s", requestUser))
+	// parse dynamo query output to Message object
+	parsedUser, _ := parseDynamoToInputUsers(userInfo)
+	fmt.Println(parsedUser[0].UserClass)
+	//Marshall to json format
+	jsonOut, err := json.Marshal(parsedUser[0].UserClass)
+
+	if err != nil {
+		return "", err
+	}
+
+	return string(jsonOut), nil
+}
+
+// QueryDynamo Query dynamoDB.go only with hashkey
+func (c *Client) QueryDynamoUsers(context context.Context, tableName string, hashKeyValue string) (dynamodb.QueryOutput, error) {
+	out, err := c.DynamoCl.Query(context, &dynamodb.QueryInput{
+		TableName:              aws.String(tableName),
+		KeyConditionExpression: aws.String("Username = :hashKey"),
+		ExpressionAttributeValues: map[string]types.AttributeValue{
+			":hashKey": &types.AttributeValueMemberS{Value: hashKeyValue},
+		},
+	})
+	if err != nil {
+		return *out, err
+	}
+
+	return *out, nil
 }

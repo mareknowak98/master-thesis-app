@@ -75,10 +75,27 @@ func HandleRequest(request events.APIGatewayProxyRequest) (events.APIGatewayProx
 				return responseGenerator(500, err.Error()), nil
 			}
 			return responseGenerator(200, resp), nil
-
+		case "GET":
+			resp, err := c.GetUsersFromClass(request)
+			if err != nil {
+				return responseGenerator(500, err.Error()), nil
+			}
+			return responseGenerator(200, resp), nil
 		default:
 			return responseGenerator(400, "No such method"), nil
 		}
+	case "/me":
+		switch request.HTTPMethod {
+		case "GET":
+			resp, err := c.GetMe(request)
+			if err != nil {
+				return responseGenerator(500, err.Error()), nil
+			}
+			return responseGenerator(200, resp), nil
+		default:
+			return responseGenerator(400, "No such method"), nil
+		}
+
 	default:
 		return responseGenerator(400, "No such endpoint"), nil
 	}
