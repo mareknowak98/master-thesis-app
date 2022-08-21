@@ -241,6 +241,193 @@ resource "aws_lambda_permission" "mylearn_cognito_users" {
 }
 
 
+#########################################
+#classes
+########################################
+# chat service endpoints
+resource "aws_api_gateway_resource" "mylearn_classes" {
+  parent_id   = aws_api_gateway_rest_api.mylearn.root_resource_id
+  path_part   = "classes"
+  rest_api_id = aws_api_gateway_rest_api.mylearn.id
+}
+#
+resource "aws_api_gateway_method" "mylearn_classes_get" {
+  http_method   = "GET"
+  resource_id   = aws_api_gateway_resource.mylearn_classes.id
+  rest_api_id   = aws_api_gateway_rest_api.mylearn.id
+  authorization = "CUSTOM"
+  authorizer_id = aws_api_gateway_authorizer.mylearn.id
+}
+
+resource "aws_api_gateway_integration" "mylearn_classes_get" {
+  rest_api_id             = aws_api_gateway_rest_api.mylearn.id
+  resource_id             = aws_api_gateway_resource.mylearn_classes.id
+  http_method             = aws_api_gateway_method.mylearn_classes_get.http_method
+  integration_http_method = "POST"
+  type                    = "AWS_PROXY"
+  uri                     = aws_lambda_function.user_lambda.invoke_arn
+}
+#
+resource "aws_api_gateway_method" "mylearn_classes_post" {
+  http_method   = "POST"
+  resource_id   = aws_api_gateway_resource.mylearn_classes.id
+  rest_api_id   = aws_api_gateway_rest_api.mylearn.id
+  authorization = "CUSTOM"
+  authorizer_id = aws_api_gateway_authorizer.mylearn.id
+}
+
+resource "aws_api_gateway_integration" "mylearn_classes_post" {
+  rest_api_id             = aws_api_gateway_rest_api.mylearn.id
+  resource_id             = aws_api_gateway_resource.mylearn_classes.id
+  http_method             = aws_api_gateway_method.mylearn_classes_post.http_method
+  integration_http_method = "POST"
+  type                    = "AWS_PROXY"
+  uri                     = aws_lambda_function.user_lambda.invoke_arn
+}
+#
+#
+resource "aws_api_gateway_method" "mylearn_classes_delete" {
+  http_method   = "DELETE"
+  resource_id   = aws_api_gateway_resource.mylearn_classes.id
+  rest_api_id   = aws_api_gateway_rest_api.mylearn.id
+  authorization = "CUSTOM"
+  authorizer_id = aws_api_gateway_authorizer.mylearn.id
+}
+
+resource "aws_api_gateway_integration" "mylearn_classes_delete" {
+  rest_api_id             = aws_api_gateway_rest_api.mylearn.id
+  resource_id             = aws_api_gateway_resource.mylearn_classes.id
+  http_method             = aws_api_gateway_method.mylearn_classes_delete.http_method
+  integration_http_method = "POST"
+  type                    = "AWS_PROXY"
+  uri                     = aws_lambda_function.user_lambda.invoke_arn
+}
+#
+
+module "cors6" {
+  source  = "squidfunk/api-gateway-enable-cors/aws"
+  version = "0.3.3"
+
+  api_id          = aws_api_gateway_rest_api.mylearn.id
+  api_resource_id = aws_api_gateway_resource.mylearn_classes.id
+}
+
+
+##########################################
+#### classUsers endpoints
+resource "aws_api_gateway_resource" "mylearn_class_users" {
+  parent_id   = aws_api_gateway_rest_api.mylearn.root_resource_id
+  path_part   = "classUsers"
+  rest_api_id = aws_api_gateway_rest_api.mylearn.id
+}
+#
+resource "aws_api_gateway_method" "mylearn_class_users_get" {
+  http_method   = "GET"
+  resource_id   = aws_api_gateway_resource.mylearn_class_users.id
+  rest_api_id   = aws_api_gateway_rest_api.mylearn.id
+  authorization = "CUSTOM"
+  authorizer_id = aws_api_gateway_authorizer.mylearn.id
+}
+
+resource "aws_api_gateway_integration" "mylearn_class_users_get" {
+  rest_api_id             = aws_api_gateway_rest_api.mylearn.id
+  resource_id             = aws_api_gateway_resource.mylearn_class_users.id
+  http_method             = aws_api_gateway_method.mylearn_class_users_get.http_method
+  integration_http_method = "POST"
+  type                    = "AWS_PROXY"
+  uri                     = aws_lambda_function.user_lambda.invoke_arn
+}
+#
+resource "aws_api_gateway_method" "mylearn_class_users_post" {
+  http_method   = "POST"
+  resource_id   = aws_api_gateway_resource.mylearn_class_users.id
+  rest_api_id   = aws_api_gateway_rest_api.mylearn.id
+  authorization = "CUSTOM"
+  authorizer_id = aws_api_gateway_authorizer.mylearn.id
+}
+
+resource "aws_api_gateway_integration" "mylearn_class_users_post" {
+  rest_api_id             = aws_api_gateway_rest_api.mylearn.id
+  resource_id             = aws_api_gateway_resource.mylearn_class_users.id
+  http_method             = aws_api_gateway_method.mylearn_class_users_post.http_method
+  integration_http_method = "POST"
+  type                    = "AWS_PROXY"
+  uri                     = aws_lambda_function.user_lambda.invoke_arn
+}
+#
+#
+resource "aws_api_gateway_method" "mylearn_class_users_delete" {
+  http_method   = "DELETE"
+  resource_id   = aws_api_gateway_resource.mylearn_class_users.id
+  rest_api_id   = aws_api_gateway_rest_api.mylearn.id
+  authorization = "CUSTOM"
+  authorizer_id = aws_api_gateway_authorizer.mylearn.id
+}
+
+resource "aws_api_gateway_integration" "mylearn_class_users_delete" {
+  rest_api_id             = aws_api_gateway_rest_api.mylearn.id
+  resource_id             = aws_api_gateway_resource.mylearn_class_users.id
+  http_method             = aws_api_gateway_method.mylearn_class_users_delete.http_method
+  integration_http_method = "POST"
+  type                    = "AWS_PROXY"
+  uri                     = aws_lambda_function.user_lambda.invoke_arn
+}
+#
+
+module "cors7" {
+  source  = "squidfunk/api-gateway-enable-cors/aws"
+  version = "0.3.3"
+
+  api_id          = aws_api_gateway_rest_api.mylearn.id
+  api_resource_id = aws_api_gateway_resource.mylearn_class_users.id
+}
+
+
+##########################################
+#### me endpoints
+resource "aws_api_gateway_resource" "mylearn_me" {
+  parent_id   = aws_api_gateway_rest_api.mylearn.root_resource_id
+  path_part   = "me"
+  rest_api_id = aws_api_gateway_rest_api.mylearn.id
+}
+#
+resource "aws_api_gateway_method" "mylearn_me_get" {
+  http_method   = "GET"
+  resource_id   = aws_api_gateway_resource.mylearn_me.id
+  rest_api_id   = aws_api_gateway_rest_api.mylearn.id
+  authorization = "CUSTOM"
+  authorizer_id = aws_api_gateway_authorizer.mylearn.id
+}
+
+resource "aws_api_gateway_integration" "mylearn_me_get" {
+  rest_api_id             = aws_api_gateway_rest_api.mylearn.id
+  resource_id             = aws_api_gateway_resource.mylearn_me.id
+  http_method             = aws_api_gateway_method.mylearn_me_get.http_method
+  integration_http_method = "POST"
+  type                    = "AWS_PROXY"
+  uri                     = aws_lambda_function.user_lambda.invoke_arn
+}
+
+#
+module "cors8" {
+  source  = "squidfunk/api-gateway-enable-cors/aws"
+  version = "0.3.3"
+
+  api_id          = aws_api_gateway_rest_api.mylearn.id
+  api_resource_id = aws_api_gateway_resource.mylearn_me.id
+}
+
+
+
+##########################################
+##########################################
+##########################################
+##########################################
+##########################################
+##########################################
+
+
+
 ##########################################
 ## API deployment
 resource "aws_api_gateway_stage" "mylearn" {
@@ -267,6 +454,12 @@ resource "aws_api_gateway_deployment" "mylearn" {
     aws_api_gateway_integration.mylearn_users_get,
     aws_api_gateway_integration.mylearn_cognito_users_login_post,
     aws_api_gateway_integration.mylearn_rest_chat_get,
+    aws_api_gateway_integration.mylearn_classes_post,
+    aws_api_gateway_integration.mylearn_classes_get,
+    aws_api_gateway_integration.mylearn_classes_delete,
+    aws_api_gateway_integration.mylearn_class_users_post,
+    aws_api_gateway_integration.mylearn_class_users_get,
+    aws_api_gateway_integration.mylearn_class_users_delete,
   ]
 }
 

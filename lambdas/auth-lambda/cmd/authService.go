@@ -19,6 +19,7 @@ func IsAllowed(method string, userGroup string) bool {
 		"GET/classUsers":    map[string]bool{"teacher-group": true, "student-group": true, "parent-group": true, "admin-group": true},
 		"POST/classUsers":   map[string]bool{"teacher-group": true},
 		"DELETE/classUsers": map[string]bool{"teacher-group": true},
+		"POST/messages":     map[string]bool{"teacher-group": true},
 	}
 
 	if endpointPerm, ok := permissions[method]; ok {

@@ -10,3 +10,6 @@ aws cognito-idp admin-confirm-sign-up \
   --region eu-central-1 \
   --user-pool-id eu-central-1_LsCgMRDvD \
   --username testuser4
+
+
+aws apigateway get-export --parameters extensions='integrations' --rest-api-id h4ihpoaqo3 --stage-name dev --export-type swagger test.json
