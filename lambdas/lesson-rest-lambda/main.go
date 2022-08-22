@@ -29,7 +29,7 @@ func HandleRequest(request events.APIGatewayProxyRequest) (events.APIGatewayProx
 	c := cmd.NewClient(region)
 
 	switch request.Path {
-	case "/lessons":
+	case "/slides":
 		switch request.HTTPMethod {
 		case "POST":
 			resp, err := c.SaveLessonSlide(request, tableName)
@@ -37,10 +37,33 @@ func HandleRequest(request events.APIGatewayProxyRequest) (events.APIGatewayProx
 				return responseGenerator(500, err.Error()), nil
 			}
 			return responseGenerator(200, resp), nil
-
+		case "DELETE":
+			resp, err := c.DeleteSlide(request, tableName)
+			if err != nil {
+				return responseGenerator(500, err.Error()), nil
+			}
+			return responseGenerator(200, resp), nil
+		case "GET":
+			resp, err := c.GetSlide(request, tableName)
+			if err != nil {
+				return responseGenerator(500, err.Error()), nil
+			}
+			return responseGenerator(200, resp), nil
 		default:
 			return responseGenerator(400, "No such method"), nil
 		}
+	case "/lessons":
+		switch request.HTTPMethod {
+		case "GET":
+			resp, err := c.GetLessons(request, tableName)
+			if err != nil {
+				return responseGenerator(500, err.Error()), nil
+			}
+			return responseGenerator(200, resp), nil
+		default:
+			return responseGenerator(400, "No such method"), nil
+		}
+
 	default:
 		return responseGenerator(400, "No such endpoint"), nil
 	}

@@ -95,12 +95,12 @@ resource "aws_dynamodb_table" "mylearn_lessons" {
 
   attribute {
     name = "LessonId"
-    type = "N"
+    type = "S"
   }
 
   attribute {
     name = "SlideId"
-    type = "N"
+    type = "S"
   }
 
   tags = {
