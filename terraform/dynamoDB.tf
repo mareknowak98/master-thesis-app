@@ -86,6 +86,20 @@ resource "aws_dynamodb_table" "mylearn_classes" {
   }
 }
 
+resource "aws_dynamodb_table" "mylearn_lessons_connections" {
+  name         = "mylearn-lessons-connections"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "userId"
+
+  attribute {
+    name = "userId"
+    type = "S"
+  }
+
+  tags = {
+    AppName = "mylearn-app"
+  }
+}
 
 resource "aws_dynamodb_table" "mylearn_lessons" {
   name         = "mylearn-lessons"

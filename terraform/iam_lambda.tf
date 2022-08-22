@@ -209,3 +209,77 @@ resource "aws_iam_role_policy" "mylearn_cognito_user" {
     ]
   })
 }
+
+
+#lesson-rest-lambda IAM
+resource "aws_iam_role" "mylearn_rest_lessons" {
+  name = format("%s-%s", "lesson-rest-lambda", var.region)
+
+  assume_role_policy  = file("files/AWSLambdaTrustPolicy.json")
+  managed_policy_arns = ["arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"]
+}
+
+resource "aws_iam_role_policy" "mylearn_rest_lessons" {
+  name = format("%s-%s", "lesson-rest-lambda", var.region)
+  role = aws_iam_role.mylearn_rest_lessons.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        "Effect" = "Allow",
+        "Action" = [
+          "dynamodb:PutItem",
+          "dynamodb:DeleteItem",
+          "dynamodb:Scan",
+          "dynamodb:UpdateItem",
+        ],
+        "Resource" = aws_dynamodb_table.mylearn_lessons.arn
+      }
+    ]
+  })
+}
+
+
+# chat-lessons-lambda IAM
+resource "aws_iam_role" "mylearn_lessons" {
+  name = format("%s-%s", "mylearn-lessons", var.region)
+
+  assume_role_policy  = file("files/AWSLambdaTrustPolicy.json")
+  managed_policy_arns = ["arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"]
+}
+
+resource "aws_iam_role_policy" "mylearn_lessons" {
+  name = format("%s-%s", "mylearn-lessons", var.region)
+  role = aws_iam_role.mylearn_lessons.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        "Effect" = "Allow",
+        "Action" = [
+          "dynamodb:DescribeReservedCapacityOfferings",
+          "dynamodb:ListGlobalTables",
+          "dynamodb:ListTables",
+          "dynamodb:DescribeReservedCapacity",
+          "dynamodb:ListBackups",
+          "dynamodb:PurchaseReservedCapacityOfferings",
+          "dynamodb:DescribeLimits",
+          "dynamodb:ListStreams"
+        ],
+        "Resource" = "*"
+      },
+      {
+        "Effect"   = "Allow",
+        "Action"   = "dynamodb:*",
+        "Resource" = aws_dynamodb_table.mylearn_lessons_connections.arn
+      },
+      {
+        "Effect"   = "Allow",
+        "Action"   = "execute-api:*",
+        "Resource" = format("%s%s", aws_apigatewayv2_api.mylearn_lessons_api.execution_arn, "/*/*/*")
+      }
+    ]
+  })
+}
