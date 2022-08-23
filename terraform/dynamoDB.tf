@@ -89,10 +89,16 @@ resource "aws_dynamodb_table" "mylearn_classes" {
 resource "aws_dynamodb_table" "mylearn_lessons_connections" {
   name         = "mylearn-lessons-connections"
   billing_mode = "PAY_PER_REQUEST"
-  hash_key     = "userId"
+  hash_key     = "LessonId"
+  range_key = "ConnectionID"
 
   attribute {
-    name = "userId"
+    name = "LessonId"
+    type = "S"
+  }
+
+  attribute {
+    name = "ConnectionID"
     type = "S"
   }
 

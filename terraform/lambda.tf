@@ -201,7 +201,7 @@ resource "aws_lambda_function" "lessons_websocket_lambda" {
   function_name = "lesson-websocket-lambda"
   handler       = "main"
   runtime       = "go1.x"
-  role          = aws_iam_role.mylearn_chat.arn
+  role          = aws_iam_role.mylearn_lessons.arn
   timeout       = 15
   memory_size   = 128
 

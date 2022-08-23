@@ -2,6 +2,24 @@ package cmd
 
 import "github.com/aws/aws-lambda-go/events"
 
+type LessonSlide struct {
+	LessonId        string `json:"lessonId"`
+	SlideId         string `json:"slideId"`
+	SlideType       string `json:"slideType"`
+	SlideContent    string `json:"slideContent"`
+	QuestionAnswers string `json:"questionAnswers"`
+}
+
+type SlideSwap struct {
+	LessonId string `json:"lessonId"`
+	SlideId  string `json:"slideId"`
+}
+
+type LessonSocket struct {
+	LessonId     string `json:"LessonId"`
+	ConnectionID string `json:"ConnectionID"`
+}
+
 // APIGatewayWebsocketProxyRequest modified a little from default struct from package
 type APIGatewayWebsocketProxyRequest struct {
 	MethodArn                       string                                        `json:"methodArn"`

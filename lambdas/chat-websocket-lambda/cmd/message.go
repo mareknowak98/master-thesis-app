@@ -91,37 +91,8 @@ func Default(request APIGatewayWebsocketProxyRequest) (events.APIGatewayProxyRes
 		_, err = apigateway.PostToConnection(input)
 		if err != nil {
 			fmt.Printf("ERROR %#v\n", err)
-			log.Println("ERROR", err.Error())
 		}
 	}
-
-	/////
-
-	//userSocks := make([]UserSocket, *output.Count)
-	//fmt.Printf("userSocks %#v\n", userSocks)
-
-	//dynamodbattribute.UnmarshalListOfMaps(output.Items, &userSocks)
-	//fmt.Printf("userSocks %#v\n", userSocks)
-
-	//for _, userSock := range userSocks {
-	//	input := &apigatewaymanagementapi.PostToConnectionInput{
-	//		ConnectionId: aws.String(userSock.ConnectionID),
-	//		Data:         data,
-	//	}
-	//	fmt.Printf("userSock %#v\n", userSock)
-	//	fmt.Printf("input %#v\n", input)
-	//	fmt.Printf("input data %#v\n", string(input.Data))
-	//
-	//	fmt.Printf("%s.execute-api.eu-central-1.amazonaws.com/test", websocketApi)
-	//	apigateway := apigatewaymanagementapi.New(sess, aws.NewConfig().WithEndpoint(fmt.Sprintf("%s.execute-api.eu-central-1.amazonaws.com/test", websocketApi)))
-	//	fmt.Printf("\ninput config %#v\n", apigateway.Endpoint)
-	//
-	//	_, err = apigateway.PostToConnection(input)
-	//	if err != nil {
-	//		fmt.Printf("ERROR %#v\n", err)
-	//		log.Println("ERROR", err.Error())
-	//	}
-	//}
 
 	return events.APIGatewayProxyResponse{
 		StatusCode: 200,

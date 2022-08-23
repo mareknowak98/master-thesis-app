@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"fmt"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
@@ -24,33 +23,29 @@ func Disconnect(request APIGatewayWebsocketProxyRequest) (events.APIGatewayProxy
 func RemoveSocket(connectionID string) {
 	tableName := os.Getenv("CONNECTIONS_TABLE")
 
-	fmt.Println(connectionID)
 	inputScan := &dynamodb.ScanInput{
 		ExpressionAttributeValues: map[string]*dynamodb.AttributeValue{
 			":a": {
 				S: aws.String(connectionID),
 			},
 		},
-		FilterExpression: aws.String("connectionID = :a"),
+		FilterExpression: aws.String("ConnectionID = :a"),
 		TableName:        aws.String(tableName),
 	}
 
 	db := dynamodb.New(GetSession())
 
 	result, err := db.Scan(inputScan)
-
-	fmt.Println(err)
-	fmt.Println(result)
-
-	fmt.Println("---------------")
-	userId := result.Items[0]["userId"].S
-	fmt.Println(*userId)
+	lessonId := result.Items[0]["LessonId"].S
 
 	input := &dynamodb.DeleteItemInput{
 		TableName: aws.String(tableName),
 		Key: map[string]*dynamodb.AttributeValue{
-			"userId": &dynamodb.AttributeValue{
-				S: aws.String(*userId),
+			"LessonId": &dynamodb.AttributeValue{
+				S: aws.String(*lessonId),
+			},
+			"ConnectionID": &dynamodb.AttributeValue{
+				S: aws.String(connectionID),
 			},
 		},
 	}
