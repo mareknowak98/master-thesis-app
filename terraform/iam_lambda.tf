@@ -271,9 +271,17 @@ resource "aws_iam_role_policy" "mylearn_lessons" {
         "Resource" = "*"
       },
       {
-        "Effect"   = "Allow",
-        "Action"   = "dynamodb:*",
-        "Resource" = aws_dynamodb_table.mylearn_lessons_connections.arn
+        "Effect" = "Allow",
+        "Action" = [
+          "dynamodb:Query",
+          "dynamodb:PutItem",
+          "dynamodb:DeleteItem",
+          "dynamodb:Scan"
+        ]
+        "Resource" = [
+          aws_dynamodb_table.mylearn_lessons_connections.arn,
+          aws_dynamodb_table.mylearn_lessons.arn
+        ]
       },
       {
         "Effect"   = "Allow",

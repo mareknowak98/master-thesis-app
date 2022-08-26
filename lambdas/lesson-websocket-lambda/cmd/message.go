@@ -35,7 +35,14 @@ func (c *Client) Default(request APIGatewayWebsocketProxyRequest) (events.APIGat
 	sortKey := map[string]string{"keyName": "SlideId", "value": slideToSwap.SlideId}
 
 	queryResult, err := c.queryDynamo(hashKey, sortKey, tableNameLessons)
+	if err != nil {
+		return events.APIGatewayProxyResponse{}, err
+	}
+
 	var lessonSlide LessonSlide
+	fmt.Println("lessonSlide")
+	fmt.Println(lessonSlide)
+
 	err = attributevalue.UnmarshalMap(queryResult.Items[0], &lessonSlide)
 
 	fmt.Println("======9")
@@ -81,28 +88,23 @@ func (c *Client) Default(request APIGatewayWebsocketProxyRequest) (events.APIGat
 		//	Data:         jsonOut,
 		//})
 
-		// TODO there was issue with IAM
 		sess := GetSession()
 
+		fmt.Println("-------")
+		fmt.Println(jsonOut)
+
 		input := &apigatewaymanagementapi.PostToConnectionInput{
-			ConnectionId: aws.String(request.RequestContext.ConnectionID),
+			ConnectionId: aws.String(lessonSocket.ConnectionID),
 			Data:         jsonOut,
 		}
+		fmt.Println(input)
 
 		apigateway := apigatewaymanagementapi.New(sess, aws.NewConfig().WithEndpoint(fmt.Sprintf("%s.execute-api.eu-central-1.amazonaws.com/%s", websocketApi, deploymentType)))
-		fmt.Printf("\ninput config %#v\n", apigateway.Endpoint)
 
 		_, err = apigateway.PostToConnection(input)
 		if err != nil {
 			fmt.Printf("ERROR %#v\n", err)
 		}
-
-		if err != nil {
-			fmt.Println(err)
-			return events.APIGatewayProxyResponse{}, err
-		}
-		//fmt.Println(apigateway)
-
 	}
 
 	return events.APIGatewayProxyResponse{

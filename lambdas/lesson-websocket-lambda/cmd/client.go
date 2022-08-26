@@ -8,6 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"log"
+	"os"
 	"strings"
 )
 
@@ -48,8 +49,9 @@ func NewClient(region string) *Client {
 
 // GetSession creates a new aws session and returns it
 func GetSession() *session.Session {
+	region := os.Getenv("REGION")
 	sess, err := session.NewSession(&aws.Config{
-		Region: aws.String("eu-central-1"),
+		Region: aws.String(region),
 	})
 	if err != nil {
 		log.Fatalln("Unable to create AWS session", err.Error())

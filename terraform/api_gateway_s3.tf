@@ -1,5 +1,5 @@
 resource "aws_api_gateway_rest_api" "mylearn_s3" {
-  name = "mylearn-s3-api"
+  name        = "mylearn-s3-api"
   description = "REST API fort S3 related stuff"
 
   body = jsonencode(
