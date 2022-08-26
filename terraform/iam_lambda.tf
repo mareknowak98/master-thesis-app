@@ -283,3 +283,32 @@ resource "aws_iam_role_policy" "mylearn_lessons" {
     ]
   })
 }
+
+#s3-content-lambda IAM
+resource "aws_iam_role" "s3_content_gateway" {
+  name = format("%s-%s", "s3-content-gateway", var.region)
+
+  assume_role_policy  = file("files/ApiGatewayTrustPolicy.json")
+  managed_policy_arns = ["arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"]
+}
+
+resource "aws_iam_role_policy" "s3_content_gateway" {
+  name = format("%s-%s", "s3-content-gateway", var.region)
+  role = aws_iam_role.s3_content_gateway.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        "Effect" = "Allow",
+        "Action" = [
+          "s3:PutObject",
+          "s3:GetObject"
+        ],
+
+        "Resource" = format("%s%s", aws_s3_bucket.mylearn_materials.arn, "/*")
+      }
+    ]
+  })
+}
+

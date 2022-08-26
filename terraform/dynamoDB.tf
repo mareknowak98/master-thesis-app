@@ -90,7 +90,7 @@ resource "aws_dynamodb_table" "mylearn_lessons_connections" {
   name         = "mylearn-lessons-connections"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "LessonId"
-  range_key = "ConnectionID"
+  range_key    = "ConnectionID"
 
   attribute {
     name = "LessonId"
