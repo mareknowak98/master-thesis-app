@@ -94,3 +94,102 @@ resource "aws_lambda_permission" "chat_api_default" {
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_apigatewayv2_api.chat_api.execution_arn}/*/$default"
 }
+
+
+############
+#websocket api gateway for chat
+
+resource "aws_apigatewayv2_api" "mylearn_lessons_api" {
+  name                       = "mylearn-lessons-websocket-api"
+  protocol_type              = "WEBSOCKET"
+  route_selection_expression = "$request.body.action"
+  description                = "Websocket API for lessons service"
+}
+
+# routes
+resource "aws_apigatewayv2_route" "mylearn_lessons_connect" {
+  api_id    = aws_apigatewayv2_api.mylearn_lessons_api.id
+  route_key = "$connect"
+  target    = "integrations/${aws_apigatewayv2_integration.mylearn_lessons_connect.id}"
+}
+
+resource "aws_apigatewayv2_integration" "mylearn_lessons_connect" {
+  api_id             = aws_apigatewayv2_api.mylearn_lessons_api.id
+  integration_type   = "AWS_PROXY"
+  integration_method = "POST"
+  integration_uri    = aws_lambda_function.lessons_websocket_lambda.invoke_arn
+}
+/////
+resource "aws_apigatewayv2_route" "mylearn_lessons_disconnect" {
+  api_id    = aws_apigatewayv2_api.mylearn_lessons_api.id
+  route_key = "$disconnect"
+  target    = "integrations/${aws_apigatewayv2_integration.mylearn_lessons_disconnect.id}"
+}
+
+resource "aws_apigatewayv2_integration" "mylearn_lessons_disconnect" {
+  api_id             = aws_apigatewayv2_api.mylearn_lessons_api.id
+  integration_type   = "AWS_PROXY"
+  integration_method = "POST"
+  integration_uri    = aws_lambda_function.lessons_websocket_lambda.invoke_arn
+}
+
+resource "aws_apigatewayv2_route" "mylearn_lessons_default" {
+  api_id    = aws_apigatewayv2_api.mylearn_lessons_api.id
+  route_key = "$default"
+  target    = "integrations/${aws_apigatewayv2_integration.mylearn_lessons_default.id}"
+}
+
+#lambda integrations
+resource "aws_apigatewayv2_integration" "mylearn_lessons_default" {
+  api_id             = aws_apigatewayv2_api.mylearn_lessons_api.id
+  integration_type   = "AWS_PROXY"
+  integration_method = "POST"
+  integration_uri    = aws_lambda_function.lessons_websocket_lambda.invoke_arn
+}
+
+#deployment
+resource "aws_apigatewayv2_deployment" "mylearn_lessons_api" {
+  api_id      = aws_apigatewayv2_api.mylearn_lessons_api.id
+  description = "Example deployment"
+
+  lifecycle {
+    create_before_destroy = true
+  }
+
+  depends_on = [
+    aws_apigatewayv2_route.mylearn_lessons_connect,
+    aws_apigatewayv2_route.mylearn_lessons_disconnect,
+    aws_apigatewayv2_route.mylearn_lessons_default,
+  ]
+
+}
+
+#stages
+resource "aws_apigatewayv2_stage" "mylearn_lessons_api" {
+  api_id = aws_apigatewayv2_api.mylearn_lessons_api.id
+  name   = var.deployment
+}
+
+# Allow the API Gateway to invoke Lambda function
+resource "aws_lambda_permission" "mylearn_lessons_connect" {
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.lessons_websocket_lambda.function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${aws_apigatewayv2_api.mylearn_lessons_api.execution_arn}/*/$connect"
+}
+
+# Allow the API Gateway to invoke Lambda function
+resource "aws_lambda_permission" "mylearn_lessons_disconnect" {
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.lessons_websocket_lambda.function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${aws_apigatewayv2_api.mylearn_lessons_api.execution_arn}/*/$disconnect"
+}
+
+# Allow the API Gateway to invoke Lambda function
+resource "aws_lambda_permission" "mylearn_lessons_default" {
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.lessons_websocket_lambda.function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${aws_apigatewayv2_api.mylearn_lessons_api.execution_arn}/*/$default"
+}

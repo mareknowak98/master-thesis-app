@@ -79,8 +79,6 @@ func parseDynamoToInputGrades(out dynamodb.QueryOutput) (string, error) {
 
 // GetGrades This function fetches grades from grades table
 func (c *Client) GetGrades(request events.APIGatewayProxyRequest, tableName string) (string, error) {
-	fmt.Println(request.QueryStringParameters)
-
 	// If query string empty
 	if len(request.QueryStringParameters) == 0 {
 		return "", fmt.Errorf("not enough parameters\n")

@@ -139,10 +139,11 @@ resource "aws_lambda_function" "user_lambda" {
 
   environment {
     variables = {
-      REGION     = var.region
-      USER_TABLE = aws_dynamodb_table.cognito_users.name
+      REGION            = var.region
+      USER_TABLE        = aws_dynamodb_table.cognito_users.name
       USER_POOL_ID      = aws_cognito_user_pool.mylearn.id
       COGNITO_CLIENT_ID = aws_cognito_user_pool_client.webapp.id
+      CLASS_TABLE       = aws_dynamodb_table.mylearn_classes.name
     }
   }
 }
@@ -167,6 +168,55 @@ resource "aws_lambda_function" "cognito_user_lambda" {
       REGION            = var.region
       USER_POOL_ID      = aws_cognito_user_pool.mylearn.id
       COGNITO_CLIENT_ID = aws_cognito_user_pool_client.webapp.id
+    }
+  }
+}
+
+resource "aws_lambda_function" "lessons_rest_lambda" {
+  # Find .zip file with name in 'user-lambda*.zip' format
+  filename      = format("%s/%s", "../lambdas/lambda_build", one(fileset("../lambdas/lambda_build", "{lesson-rest-lambda}*.zip")))
+  function_name = "lesson-rest-lambda"
+  handler       = "main"
+  runtime       = "go1.x"
+  role          = aws_iam_role.mylearn_rest_lessons.arn
+  timeout       = 15
+  memory_size   = 128
+
+  tags = {
+    AppName = "mylearn-app"
+  }
+
+  environment {
+    variables = {
+      REGION        = var.region
+      LESSONS_TABLE = aws_dynamodb_table.mylearn_lessons.name
+    }
+  }
+}
+
+
+resource "aws_lambda_function" "lessons_websocket_lambda" {
+  # Find .zip file with name in 'chat-websocket-lambda*.zip' format
+  filename      = format("%s/%s", "../lambdas/lambda_build", one(fileset("../lambdas/lambda_build", "{lesson-websocket-lambda}*.zip")))
+  function_name = "lesson-websocket-lambda"
+  handler       = "main"
+  runtime       = "go1.x"
+  role          = aws_iam_role.mylearn_lessons.arn
+  timeout       = 15
+  memory_size   = 128
+
+  tags = {
+    AppName = "mylearn-app"
+  }
+
+  environment {
+    variables = {
+      REGION            = var.region
+      USER_POOL_ID      = aws_cognito_user_pool.mylearn.id
+      CONNECTIONS_TABLE = aws_dynamodb_table.mylearn_lessons_connections.name
+      DEPLOYMENT_TYPE   = var.deployment
+      LESSONS_TABLE     = aws_dynamodb_table.mylearn_lessons.name
+      WEBSOCKET_API     = aws_apigatewayv2_api.mylearn_lessons_api.id
     }
   }
 }

@@ -1,9 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
-	"mylearnproject/lambdas/user-lambda/cmd"
+	"mylearnproject/lambdas/lesson-rest-lambda/cmd"
 	"os"
 )
 
@@ -19,40 +20,31 @@ func responseGenerator(code int, message string) events.APIGatewayProxyResponse 
 }
 
 func HandleRequest(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	tableName := os.Getenv("USER_TABLE")
+	tableName := os.Getenv("LESSONS_TABLE")
 	region := os.Getenv("REGION")
 
+	fmt.Printf("Request: %#v\n", request)
+
+	fmt.Println(tableName)
 	c := cmd.NewClient(region)
 
 	switch request.Path {
-	case "/users":
+	case "/slides":
 		switch request.HTTPMethod {
-		case "GET":
-			resp, err := c.GetUsers(request, tableName)
-			if err != nil {
-				return responseGenerator(500, err.Error()), nil
-			}
-			return responseGenerator(200, resp), nil
-
-		default:
-			return responseGenerator(400, "No such method"), nil
-		}
-	case "/classes":
-		switch request.HTTPMethod {
-		case "GET":
-			resp, err := c.GetClasses(request)
-			if err != nil {
-				return responseGenerator(500, err.Error()), nil
-			}
-			return responseGenerator(200, resp), nil
 		case "POST":
-			resp, err := c.SetClasses(request)
+			resp, err := c.SaveLessonSlide(request, tableName)
 			if err != nil {
 				return responseGenerator(500, err.Error()), nil
 			}
 			return responseGenerator(200, resp), nil
 		case "DELETE":
-			resp, err := c.DeleteClasses(request)
+			resp, err := c.DeleteSlide(request, tableName)
+			if err != nil {
+				return responseGenerator(500, err.Error()), nil
+			}
+			return responseGenerator(200, resp), nil
+		case "GET":
+			resp, err := c.GetSlide(request, tableName)
 			if err != nil {
 				return responseGenerator(500, err.Error()), nil
 			}
@@ -60,34 +52,10 @@ func HandleRequest(request events.APIGatewayProxyRequest) (events.APIGatewayProx
 		default:
 			return responseGenerator(400, "No such method"), nil
 		}
-
-	case "/classUsers":
-		switch request.HTTPMethod {
-		case "POST":
-			resp, err := c.AddUserToClass(request)
-			if err != nil {
-				return responseGenerator(500, err.Error()), nil
-			}
-			return responseGenerator(200, resp), nil
-		case "DELETE":
-			resp, err := c.DeleteUserFromClass(request)
-			if err != nil {
-				return responseGenerator(500, err.Error()), nil
-			}
-			return responseGenerator(200, resp), nil
-		case "GET":
-			resp, err := c.GetUsersFromClass(request)
-			if err != nil {
-				return responseGenerator(500, err.Error()), nil
-			}
-			return responseGenerator(200, resp), nil
-		default:
-			return responseGenerator(400, "No such method"), nil
-		}
-	case "/me":
+	case "/lessons":
 		switch request.HTTPMethod {
 		case "GET":
-			resp, err := c.GetMe(request)
+			resp, err := c.GetLessons(request, tableName)
 			if err != nil {
 				return responseGenerator(500, err.Error()), nil
 			}

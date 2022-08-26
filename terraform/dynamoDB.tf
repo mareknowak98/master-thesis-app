@@ -23,10 +23,10 @@ resource "aws_dynamodb_table" "mylearn_grades" {
 resource "aws_dynamodb_table" "cognito_users" {
   name         = "cognito-users"
   billing_mode = "PAY_PER_REQUEST"
-  hash_key     = "UserId"
+  hash_key     = "Username"
 
   attribute {
-    name = "UserId"
+    name = "Username"
     type = "S"
   }
 
@@ -63,6 +63,63 @@ resource "aws_dynamodb_table" "chat_messages" {
 
   attribute {
     name = "Timestamp"
+    type = "S"
+  }
+
+  tags = {
+    AppName = "mylearn-app"
+  }
+}
+
+resource "aws_dynamodb_table" "mylearn_classes" {
+  name         = "mylearn-classes"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "UserClass"
+
+  attribute {
+    name = "UserClass"
+    type = "S"
+  }
+
+  tags = {
+    AppName = "mylearn-app"
+  }
+}
+
+resource "aws_dynamodb_table" "mylearn_lessons_connections" {
+  name         = "mylearn-lessons-connections"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "LessonId"
+  range_key    = "ConnectionID"
+
+  attribute {
+    name = "LessonId"
+    type = "S"
+  }
+
+  attribute {
+    name = "ConnectionID"
+    type = "S"
+  }
+
+  tags = {
+    AppName = "mylearn-app"
+  }
+}
+
+resource "aws_dynamodb_table" "mylearn_lessons" {
+  name         = "mylearn-lessons"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "LessonId"
+  range_key    = "SlideId"
+
+  attribute {
+    name = "LessonId"
+    type = "S"
+  }
+
+  attribute {
+    name = "SlideId"
     type = "S"
   }
 
