@@ -89,7 +89,6 @@ export default {
             message: msg.value
           }
       }
-      console.log(m)
       socket.value.send(JSON.stringify(m))
       rest_messages.value.push({
         userFromTo: TokenService.decodeToken(token.value).username + ":" + userid.value,

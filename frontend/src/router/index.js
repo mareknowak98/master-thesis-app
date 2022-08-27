@@ -6,6 +6,10 @@ import MainView from "@/views/MainView";
 import GradeBookView from "@/views/GradeBookView";
 import ChatUserListView from "@/views/ChatUserListView";
 import ChatWithUserView from "@/views/ChatWithUserView";
+import ManagePresentations from "@/views/ManagePresentations";
+import ManagePresentation from "@/views/ManagePresentation";
+import SlideView from "@/views/SlideView";
+import AddNewSlideView from "@/views/AddNewSlideView";
 
 
 const routes = [
@@ -43,6 +47,26 @@ const routes = [
     path: "/chatUser/:userId",
     name: "chatUser",
     component: ChatWithUserView,
+  },
+  {
+    path: "/managePresentations",
+    name: "managePresentations",
+    component: ManagePresentations,
+  },
+  {
+    path: "/managePresentation/:presentationId",
+    name: "managePresentation",
+    component: ManagePresentation,
+  },
+  {
+    path: "/managePresentation/slide/:presentationId/:slideId",
+    name: "slideView",
+    component: SlideView,
+  },
+  {
+    path: "/managePresentation/addNewSlide/:presentationId",
+    name: "addNewSlideView",
+    component: AddNewSlideView,
   },
 ];
 
