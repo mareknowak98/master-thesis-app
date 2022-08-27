@@ -220,3 +220,26 @@ resource "aws_lambda_function" "lessons_websocket_lambda" {
     }
   }
 }
+
+resource "aws_lambda_function" "s3_management" {
+  # Find .zip file with name in 's3-management-lambda*.zip' format
+  filename      = format("%s/%s", "../lambdas/lambda_build", one(fileset("../lambdas/lambda_build", "{s3-management-lambda}*.zip")))
+  function_name = "s3-management-lambda"
+  handler       = "main"
+  runtime       = "go1.x"
+  role          = aws_iam_role.s3_management_lambda.arn
+  timeout       = 15
+  memory_size   = 128
+
+  tags = {
+    AppName = "mylearn-app"
+  }
+
+  environment {
+    variables = {
+      REGION         = var.region
+      MYLEARN_BUCKET = aws_s3_bucket.mylearn_materials.bucket
+    }
+  }
+}
+

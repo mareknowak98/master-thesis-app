@@ -53,6 +53,10 @@ resource "aws_apigatewayv2_deployment" "chat" {
   api_id      = aws_apigatewayv2_api.chat_api.id
   description = "Example deployment"
 
+  variables = {
+    deployed_at = timestamp()
+  }
+
   lifecycle {
     create_before_destroy = true
   }
@@ -154,6 +158,10 @@ resource "aws_apigatewayv2_deployment" "mylearn_lessons_api" {
 
   lifecycle {
     create_before_destroy = true
+  }
+
+  variables = {
+    deployed_at = timestamp()
   }
 
   depends_on = [
