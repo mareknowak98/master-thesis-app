@@ -1,8 +1,15 @@
 <template>
   <LoggedNavbar/>
   <h2>Edit slide: {{this.$route.params.presentationId}} / {{this.$route.params.slideId}}</h2>
-  <h3>----------------</h3>
-  {{this.slide}}
+
+  <div v-if="this.slideType == 'TEXT'">
+    <TextSlide/>
+  </div>
+
+  <div v-if="this.slideType == 'QA'">
+    <QASlide/>
+  </div>
+
   <h3>----------------</h3>
   <Button @click="deleteSlide" label="Delete slide" />
 
@@ -21,6 +28,10 @@ import axios from "axios";
 import { TokenService } from "@/store/tokenService";
 import { useRoute } from "vue-router";
 import router from "@/router";
+import TextSlide from "@/components/TextSlide";
+import QASlide from "@/components/QASlide";
+
+
 
 export default {
   name: "SlideView",
@@ -28,11 +39,14 @@ export default {
     LoggedNavbar,
     DataTable,
     Column,
+    TextSlide,
+    QASlide
   },
   setup() {
     let slide = ref(null)
     let presentationId = ref('')
     let slideId = ref('')
+    let slideType = ref('')
 
     const route = useRoute()
 
@@ -56,6 +70,7 @@ export default {
 
       axios.get(process.env.VUE_APP_BACKEND_RESP_API + 'slides?' +params , config).then(resp => {
         slide.value = resp.data
+        slideType.value = resp.data[0].slideType
       }).catch(err => {
         console.log(err)
       })
@@ -81,7 +96,8 @@ export default {
 
       return {
       slide,
-      deleteSlide
+      deleteSlide,
+      slideType
     }
   }
 };

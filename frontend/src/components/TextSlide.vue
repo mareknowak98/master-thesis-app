@@ -1,7 +1,10 @@
 <template>
-  <div id="textinput">
-    <h2>TBD</h2>
-  </div>
+  <Editor v-model="slide.slideContent" editorStyle="height: 320px" readonly="true">
+    <template #toolbar>
+		<span class="ql-formats">
+		</span>
+    </template>
+  </Editor>
 </template>
 
 
@@ -18,43 +21,45 @@ import Editor from 'primevue/editor';
 import router from "@/router";
 
 export default {
-  name: "AddDragSlide",
+  name: "AddTextSlide",
   components: {
     Editor
   },
   setup() {
     let presentationId = ref('')
-    let slideText = ref('')
-    let currentPresentationSlides = ref(null)
+    let slideId = ref('')
+    let slide = ref('')
 
     const route = useRoute()
 
     onMounted(() => {
       presentationId.value = route.params.presentationId
-      getSlides()
+      slideId.value = route.params.slideId
+      getSlide()
     })
 
-    function getSlides() {
+    function getSlide() {
       let config = {
         headers: {
           Authorization: TokenService.getToken(),
         }
       }
       const params = new URLSearchParams({
-        lesson: presentationId.value
+        lesson: presentationId.value,
+        slide: slideId.value
       }).toString()
 
       axios.get(process.env.VUE_APP_BACKEND_RESP_API + 'slides?' +params , config).then(resp => {
-        currentPresentationSlides.value = resp.data
+        slide.value = resp.data[0]
       }).catch(err => {
         console.log(err)
       })
     }
 
-
     return {
       presentationId,
-      slideText
+      slideId,
+      slide
     }
   }
 };

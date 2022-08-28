@@ -1,5 +1,4 @@
 <template>
-  <p>Student meny</p>
   <div class="surface-section px-4 py-8 md:px-6 lg:px-8 text-center">
     <div class="text-center">
       <img src="../assets/mylearn_logo.png" alt="Image" height="150" class="mb-3">

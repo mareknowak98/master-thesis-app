@@ -42,9 +42,12 @@
         </router-link>
       </div>
       <div class="col-12 md:col-4 mb-4 px-5">
+        <router-link to="/manageClasses">
+
             <span class="p-3 shadow-2 mb-3 inline-block surface-card" style="border-radius: 10px">
                 <i class="pi pi-github text-4xl text-blue-500"></i>
             </span>
+        </router-link>
         <div class="text-900 mb-3 font-medium">Classes management</div>
         <span class="text-700 text-sm line-height-3">Create classes and attach users</span>
       </div>

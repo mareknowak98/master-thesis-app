@@ -62,6 +62,13 @@ export default {
       axios.get(process.env.VUE_APP_BACKEND_RESP_API + 'users?' + params, config).then(resp => {
         users.value = resp.data
         console.log(resp)
+      }).then(resp =>{
+        let username = TokenService.decodeToken(TokenService.getToken()).username
+        console.log(username)
+        const indexOfObject = users.value.findIndex(object => {
+          return object.Username === username;
+        });
+        users.value.splice(indexOfObject, 1);
       }).catch(err => {
         console.log(err)
       })

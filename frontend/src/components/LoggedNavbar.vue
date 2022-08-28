@@ -24,8 +24,8 @@ export default {
   data() {
     return {
       items: [
-        {label: 'Menu', icon: 'pi pi-fw pi-home', command:() => {this.menu()}},
-        {label: 'Profile', icon: 'pi pi-fw pi-home'},
+        {label: 'Menu', icon: 'pi pi-fw pi-home', to: '/mainView'},
+        {label: 'Profile', icon: 'pi pi-fw pi-home', to: '/profile'},
         {label: 'Settings', icon: 'pi pi-fw pi-cog'},
         {label: 'Log out', icon: 'pi pi-fw pi-calendar', command:() => {this.logOut()}},
       ]
@@ -45,6 +45,11 @@ export default {
       router.push({name: "mainView"})
     }
 
+    function profile() {
+      router.push({name: "profile"})
+    }
+
+
     function logOut(){
       TokenService.deleteToken()
       router.push({name: "home"})
@@ -54,7 +59,8 @@ export default {
       decodedToken,
       group,
       logOut,
-      menu
+      menu,
+      profile
     }
   }
 };

@@ -9,6 +9,9 @@
   <div v-if="this.selectedSlide == 'QA'">
     <AddQASlide/>
   </div>
+  <div v-if="this.selectedSlide == 'DRAG'">
+    <AddDragSlide/>
+  </div>
 </template>
 
 
@@ -25,6 +28,7 @@ import { TokenService } from "@/store/tokenService";
 import { useRoute } from "vue-router";
 import AddTextSlide from "@/components/AddTextSlide";
 import AddQASlide from "@/components/AddQASlide";
+import AddDragSlide from "@/components/AddDragSlide";
 
 import router from "@/router";
 
@@ -34,7 +38,8 @@ export default {
     LoggedNavbar,
     Dropdown,
     AddTextSlide,
-    AddQASlide
+    AddQASlide,
+    AddDragSlide
   },
   setup() {
     let slide = ref(null)

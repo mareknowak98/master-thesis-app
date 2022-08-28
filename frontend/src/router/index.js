@@ -10,7 +10,9 @@ import ManagePresentations from "@/views/ManagePresentations";
 import ManagePresentation from "@/views/ManagePresentation";
 import SlideView from "@/views/SlideView";
 import AddNewSlideView from "@/views/AddNewSlideView";
-
+import ProfileView from "@/views/ProfileView";
+import ClassesManage from "@/views/ClassesManageView";
+import ClassManageView from "@/views/ClassManageView";
 
 const routes = [
   {
@@ -67,6 +69,21 @@ const routes = [
     path: "/managePresentation/addNewSlide/:presentationId",
     name: "addNewSlideView",
     component: AddNewSlideView,
+  },
+  {
+    path: "/profile",
+    name: "profile",
+    component: ProfileView,
+  },
+  {
+    path: "/manageClasses",
+    name: "manageClasses",
+    component: ClassesManage,
+  },
+  {
+    path: "/manageClass/:classId",
+    name: "manageClass",
+    component: ClassManageView,
   },
 ];
 
