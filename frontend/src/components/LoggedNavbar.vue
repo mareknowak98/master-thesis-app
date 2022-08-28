@@ -24,7 +24,8 @@ export default {
   data() {
     return {
       items: [
-        {label: 'Profile', icon: 'pi pi-fw pi-home'},
+        {label: 'Menu', icon: 'pi pi-fw pi-home', to: '/mainView'},
+        {label: 'Profile', icon: 'pi pi-fw pi-home', to: '/profile'},
         {label: 'Settings', icon: 'pi pi-fw pi-cog'},
         {label: 'Log out', icon: 'pi pi-fw pi-calendar', command:() => {this.logOut()}},
       ]
@@ -40,6 +41,15 @@ export default {
       group.value = decodedToken.value['cognito:groups'][0]
     })
 
+    function menu() {
+      router.push({name: "mainView"})
+    }
+
+    function profile() {
+      router.push({name: "profile"})
+    }
+
+
     function logOut(){
       TokenService.deleteToken()
       router.push({name: "home"})
@@ -48,7 +58,9 @@ export default {
     return {
       decodedToken,
       group,
-      logOut
+      logOut,
+      menu,
+      profile
     }
   }
 };

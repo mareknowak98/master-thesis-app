@@ -1,25 +1,70 @@
 <template>
   <LoggedNavbar/>
   <h1>Chatting with user {{this.$route.params.userId}}</h1>
-  <h2>-------------------</h2>
 
-  <table class="table table-striped table-bordered">
-    <thead>
-    <tr>
-      <th>UserFrom:UserTo</th>
-      <th>Date</th>
-      <th>Message</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr v-for="msg in rest_messages" :key="msg.id">
-      <td>{{msg.userFromTo}}</td>
-      <td>{{msg.timestamp}}</td>
-      <td>{{msg.message}}</td>
-    </tr>
-    </tbody>
-  </table>
-  <h2>-------------------</h2>
+<!--  <section ref="chatArea" class="chat-area">-->
+
+<!--  <b-col>-->
+<!--    <div>-->
+<!--      <p v-for="message in rest_messages" class="message">-->
+<!--        <div v-if="message.userFromTo == msgRec">-->
+<!--          <div class="message-in"> {{ message.message }} </div>-->
+<!--        </div>-->
+<!--        <div v-if="message.userFromTo == msgSent">-->
+<!--          <div class="message-out"> {{ message.message }} </div>-->
+<!--        </div>-->
+
+<!--      </p>-->
+<!--    </div>-->
+<!--  </b-col>-->
+<!--  </section>-->
+
+<!--  <table class="table table-striped table-bordered">-->
+<!--    <thead>-->
+<!--    <tr>-->
+<!--      <th>UserFrom:UserTo</th>-->
+<!--      <th>Date</th>-->
+<!--      <th>Message</th>-->
+<!--    </tr>-->
+<!--    </thead>-->
+<!--    <tbody>-->
+
+<!--    <tr v-for="msg in rest_messages" :key="msg.id">-->
+<!--      <td>{{msg.userFromTo}}</td>-->
+<!--      <td>{{msg.timestamp}}</td>-->
+<!--      <td>{{msg.message}}</td>-->
+<!--    </tr>-->
+<!--    </tbody>-->
+<!--  </table>-->
+
+<!--  <div class="card">-->
+<!--    <DataTable :value="rest_messages" scrollable scrollHeight="400px" :virtualScrollerOptions="{ itemSize: 46 }">-->
+<!--      <Column field="userFromTo" header="userFromTo"></Column>-->
+<!--      <Column field="message" header="message"></Column>-->
+<!--    </DataTable>-->
+<!--  </div>-->
+
+
+  <div class="panel">
+    <div class="messages" ref="messagesRef">
+      <div class="inner">
+        <div
+          :key="index"
+          v-for="(message, index) in rest_messages"
+          class="message"
+        >
+          <div v-if="message.userFromTo === msgSent" class="user-self">
+            You:&nbsp;
+          </div>
+          <div v-if="message.userFromTo === msgRec" class="user-them">
+            {{this.userid}}:&nbsp;
+          </div>
+          <div class="text">{{ message.message }}</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
 
   <InputText type="text" v-model="msg" />
   <Button @click="sendMessage" label="Send message" />
@@ -31,15 +76,20 @@
 <script>
 
 import LoggedNavbar from "@/components/LoggedNavbar";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onUpdated } from "vue";
 import axios from "axios";
 import { TokenService } from "@/store/tokenService";
 import { useRoute } from "vue-router";
+import { watch } from "vue";
+import DataTable from 'primevue/datatable';
+import Column from 'primevue/column'
 
 export default {
   name: "ChatWithUserView",
   components: {
     LoggedNavbar,
+    DataTable,
+    Column
   },
   setup() {
     let rest_messages = ref(null)
@@ -50,6 +100,8 @@ export default {
     let socket = ref(null)
     let token = ref(null)
 
+    let msgSent = ref('')
+    let msgRec = ref('')
 
     const route = useRoute()
 
@@ -57,6 +109,9 @@ export default {
       userid.value = route.params.userId
       token.value = TokenService.getToken()
       getRestMessages()
+
+      msgSent.value = TokenService.decodeToken(token.value).username + ":" + userid.value
+      msgRec.value = userid.value  + ":" +  TokenService.decodeToken(token.value).username
 
       try {
         const params = new URLSearchParams({
@@ -79,6 +134,10 @@ export default {
       }
     })
 
+    watch(rest_messages.value, (oldValue, prevSelection) => {
+      console.log("essa")
+    })
+
     function sendMessage() {
       var d = new Date();
       let m = {
@@ -89,7 +148,6 @@ export default {
             message: msg.value
           }
       }
-      console.log(m)
       socket.value.send(JSON.stringify(m))
       rest_messages.value.push({
         userFromTo: TokenService.decodeToken(token.value).username + ":" + userid.value,
@@ -112,6 +170,12 @@ export default {
 
       axios.get(process.env.VUE_APP_BACKEND_RESP_API + 'messages?' + params2, config).then(resp => {
         rest_messages.value = resp.data
+      }).then(resp =>{
+        rest_messages.value.sort(function(a,b){
+          // Turn your strings into dates, and then subtract them
+          // to get a value that is either negative, positive, or zero.
+          return new Date(a.timestamp) - new Date(b.timestamp);
+        });
       }).catch(err => {
         console.log(err)
       })
@@ -123,7 +187,10 @@ export default {
       websocket_msg,
       socket,
       msg,
-      sendMessage
+      sendMessage,
+      msgSent,
+      msgRec,
+      userid
     }
   }
 };
@@ -131,4 +198,43 @@ export default {
 
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+.panel {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  margin: 0 auto;
+  //max-width: 300px;
+  height: 400px;
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(4px);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  margin-bottom: 2%;
+}
+.messages {
+  height: 100%;
+  width: 100%;
+  overflow-y: scroll;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  background-color: white;
+}
+.inner {
+  padding: 10px;
+}
+.message {
+  text-align: left;
+  display: flex;
+  margin-bottom: 6px;
+}
+.user-self {
+  color: green;
+}
+.user-them {
+  color: red;
+}
+
+
+</style>
