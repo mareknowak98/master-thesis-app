@@ -63,6 +63,7 @@ export default {
         password: password1.value,
       }).then(resp => {
         TokenService.setToken(resp.data.accessToken)
+        TokenService.setIdToken(resp.data.idToken)
         email1.value = password1.value = ''
       }).then(resp => {
         let decodedToken = TokenService.decodeToken(TokenService.getToken())

@@ -52,6 +52,7 @@ export default {
 
     function logOut(){
       TokenService.deleteToken()
+      TokenService.deleteIdToken()
       router.push({name: "home"})
     }
 

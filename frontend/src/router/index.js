@@ -13,6 +13,8 @@ import AddNewSlideView from "@/views/AddNewSlideView";
 import ProfileView from "@/views/ProfileView";
 import ClassesManage from "@/views/ClassesManageView";
 import ClassManageView from "@/views/ClassManageView";
+import S3MaterialsMainTeacherView from "@/views/S3MaterialsMainTeacherView";
+import S3ClassMaterialsView from "@/views/S3ClassMaterialsView";
 
 const routes = [
   {
@@ -84,6 +86,16 @@ const routes = [
     path: "/manageClass/:classId",
     name: "manageClass",
     component: ClassManageView,
+  },
+  {
+    path: "/classContent",
+    name: "classContent",
+    component: S3MaterialsMainTeacherView,
+  },
+  {
+    path: "/classContent/:classId",
+    name: "classContentFiles",
+    component: S3ClassMaterialsView,
   },
 ];
 
