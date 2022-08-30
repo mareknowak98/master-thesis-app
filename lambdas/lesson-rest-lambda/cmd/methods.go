@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
+	"golang.org/x/exp/slices"
 )
 
 // SaveLessonSlide function parse request message to LessonSlide struct and save record to dynamoDB
@@ -52,6 +53,9 @@ func (c *Client) GetSlide(request events.APIGatewayProxyRequest, tableName strin
 	sortKey := map[string]string{"keyName": "SlideId", "value": request.QueryStringParameters["slide"]}
 
 	out, err := c.queryDynamo(hashKey, sortKey, tableName)
+	if err != nil {
+		return "", err
+	}
 
 	var resp []LessonSlide
 	err = attributevalue.UnmarshalListOfMaps(out.Items, &resp)
@@ -74,12 +78,18 @@ func (c *Client) GetLessons(request events.APIGatewayProxyRequest, tableName str
 			return "", err
 		}
 
-		var resp []map[string]string
+		var obj []LessonId
+		err = attributevalue.UnmarshalListOfMaps(out.Items, &obj)
+		fmt.Printf("%#v\n", obj)
 
-		err = attributevalue.UnmarshalListOfMaps(out.Items, &resp)
-		uniqueResp := unique(resp, "LessonId")
+		var uniqueLessons []LessonId
+		for _, elem := range obj {
+			if !slices.Contains(uniqueLessons, elem) {
+				uniqueLessons = append(uniqueLessons, elem)
+			}
+		}
 
-		jsonOut, err := json.Marshal(uniqueResp)
+		jsonOut, err := json.Marshal(uniqueLessons)
 
 		if err != nil {
 			return "", err

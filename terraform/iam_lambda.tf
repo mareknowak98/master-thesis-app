@@ -167,8 +167,19 @@ resource "aws_iam_role_policy" "mylearn_users" {
           "dynamodb:DeleteItem",
           "dynamodb:Scan",
           "dynamodb:UpdateItem",
+          "dynamodb:Query"
         ],
         "Resource" = aws_dynamodb_table.mylearn_classes.arn
+      },
+      {
+        "Effect" = "Allow",
+        "Action" = [
+          "dynamodb:Query",
+          "dynamodb:UpdateItem"
+        ],
+        "Resource" = [
+          aws_dynamodb_table.cognito_users.arn
+        ]
       },
       {
         "Effect" = "Allow",
@@ -230,6 +241,7 @@ resource "aws_iam_role_policy" "mylearn_rest_lessons" {
         "Effect" = "Allow",
         "Action" = [
           "dynamodb:PutItem",
+          "dynamodb:Query",
           "dynamodb:DeleteItem",
           "dynamodb:Scan",
           "dynamodb:UpdateItem",
@@ -338,7 +350,7 @@ resource "aws_iam_role_policy" "s3_management_lambda" {
       {
         "Effect" = "Allow",
         "Action" = [
-          "s3:ListObjects"
+          "s3:ListBucket"
         ],
 
         "Resource" = format("%s", aws_s3_bucket.mylearn_materials.arn)

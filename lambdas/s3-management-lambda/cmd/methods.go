@@ -18,6 +18,9 @@ func (c *Client) GetFiles(request events.APIGatewayProxyRequest, s3Name string) 
 
 	folder := request.QueryStringParameters["folder"]
 	files, err := c.getFilesFromFolder(s3Name, folder)
+	if err != nil {
+		return "", err
+	}
 
 	var resp []FileData
 

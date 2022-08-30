@@ -26,6 +26,8 @@ func IsAllowed(method string, userGroup string) bool {
 		"GET/lessons":       map[string]bool{"teacher-group": true, "student-group": true, "parent-group": true, "admin-group": true},
 		"GET/files":         map[string]bool{"teacher-group": true, "student-group": true, "parent-group": true, "admin-group": true},
 		"GET/folders":       map[string]bool{"teacher-group": true, "student-group": true, "parent-group": true, "admin-group": true},
+		"GET/s3":            map[string]bool{"teacher-group": true, "student-group": true, "parent-group": true, "admin-group": true},
+		"PUT/s3":            map[string]bool{"teacher-group": true, "student-group": true, "parent-group": true, "admin-group": true},
 	}
 
 	if endpointPerm, ok := permissions[method]; ok {

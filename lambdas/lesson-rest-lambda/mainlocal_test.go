@@ -64,36 +64,36 @@ func TestHandleRequest(t *testing.T) {
 //	return request
 //}
 
-//func getDebugInput() events.APIGatewayProxyRequest {
-//	var request events.APIGatewayProxyRequest
-//	_ = os.Setenv("LESSONS_TABLE", "mylearn-lessons")
-//	_ = os.Setenv("REGION", "eu-central-1")
-//
-//	request.HTTPMethod = "GET"
-//	request.Path = "/slides"
-//
-//	m := make(map[string]string)
-//	m["lesson"] = "12"
-//	m["slide"] = "2"
-//
-//	request.QueryStringParameters = m
-//
-//	return request
-//}
-
 func getDebugInput() events.APIGatewayProxyRequest {
 	var request events.APIGatewayProxyRequest
 	_ = os.Setenv("LESSONS_TABLE", "mylearn-lessons")
 	_ = os.Setenv("REGION", "eu-central-1")
 
 	request.HTTPMethod = "GET"
-	request.Path = "/lessons"
+	request.Path = "/slides"
 
-	//m := make(map[string]string)
-	//m["lesson"] = "12"
+	m := make(map[string]string)
+	m["lesson"] = "12"
 	//m["slide"] = "2"
 
-	//request.QueryStringParameters = m
+	request.QueryStringParameters = m
 
 	return request
 }
+
+//func getDebugInput() events.APIGatewayProxyRequest {
+//	var request events.APIGatewayProxyRequest
+//	_ = os.Setenv("LESSONS_TABLE", "mylearn-lessons")
+//	_ = os.Setenv("REGION", "eu-central-1")
+//
+//	request.HTTPMethod = "GET"
+//	request.Path = "/lessons"
+//
+//	//m := make(map[string]string)
+//	//m["lesson"] = "12"
+//	//m["slide"] = "2"
+//
+//	//request.QueryStringParameters = m
+//
+//	return request
+//}

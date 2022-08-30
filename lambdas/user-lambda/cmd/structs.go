@@ -13,7 +13,7 @@ type OutputUsers struct {
 
 type ClassRecord struct {
 	UserClass string   `json:"userClass"`
-	UserList  []string `json:"serList"`
+	UserList  []string `json:"userList"`
 }
 
 type AddClassInput struct {

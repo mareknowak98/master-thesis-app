@@ -36,6 +36,7 @@ func (c *Client) getUserToken(login UserLogin, clientId string) (UserLoginRespon
 
 	resp.AccessToken = *auth.AuthenticationResult.AccessToken
 	resp.RefreshToken = *auth.AuthenticationResult.RefreshToken
+	resp.IdToken = *auth.AuthenticationResult.IdToken
 
 	return resp, nil
 }

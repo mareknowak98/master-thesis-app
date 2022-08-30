@@ -25,7 +25,6 @@ func HandleRequest(request events.APIGatewayProxyRequest) (events.APIGatewayProx
 
 	fmt.Printf("Request: %#v\n", request)
 
-	fmt.Println(tableName)
 	c := cmd.NewClient(region)
 
 	switch request.Path {

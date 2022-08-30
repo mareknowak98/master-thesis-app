@@ -212,7 +212,17 @@ func (c *Client) AddUserToClass(request events.APIGatewayProxyRequest) (string, 
 	if err != nil {
 		return "", err
 	}
-	userList = append(userList, input.Username)
+
+	var isPresent = false
+	for _, elem := range userList {
+		if elem == input.Username {
+			isPresent = true
+		}
+	}
+
+	if !isPresent {
+		userList = append(userList, input.Username)
+	}
 	var dynamoRecord ClassRecord
 	dynamoRecord.UserClass = input.UserClass
 	dynamoRecord.UserList = userList
@@ -325,12 +335,20 @@ func (c *Client) GetUsersFromClass(request events.APIGatewayProxyRequest) (strin
 		return "", err
 	}
 
-	var userList []string
+	var userList ClassRecord
 	//Unmarshall response to list
-	err = attributevalue.Unmarshal(currentClassMembers.Items[0]["UserList"], &userList)
+	err = attributevalue.UnmarshalMap(currentClassMembers.Items[0], &userList)
 	if err != nil {
 		return "", err
 	}
+
+	jsonOut, err := json.Marshal(userList)
+
+	if err != nil {
+		return "", err
+	}
+
+	return string(jsonOut), nil
 
 	return "", nil
 }
@@ -356,11 +374,19 @@ func (c *Client) GetUserClass(request events.APIGatewayProxyRequest) (string, er
 	}
 	//User sending request
 	requestUser := decodedToken["username"]
-	fmt.Println(requestUser)
+	fmt.Println(fmt.Sprintf("%s", requestUser))
 
 	userInfo, err := c.QueryDynamoUsers(context.Background(), tableName, fmt.Sprintf("%s", requestUser))
+	if err != nil {
+		return "", err
+	}
+
 	// parse dynamo query output to Message object
-	parsedUser, _ := parseDynamoToInputUsers(userInfo)
+	parsedUser, err := parseDynamoToInputUsers(userInfo)
+	if err != nil {
+		return "", err
+	}
+
 	fmt.Println(parsedUser[0].UserClass)
 	//Marshall to json format
 	jsonOut, err := json.Marshal(parsedUser[0].UserClass)

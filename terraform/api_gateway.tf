@@ -58,6 +58,15 @@ resource "aws_lambda_permission" "mylearn_grades" {
   source_arn = "${aws_api_gateway_rest_api.mylearn.execution_arn}/*/*"
 }
 
+module "cors13" {
+  source  = "squidfunk/api-gateway-enable-cors/aws"
+  version = "0.3.3"
+
+  api_id          = aws_api_gateway_rest_api.mylearn.id
+  api_resource_id = aws_api_gateway_resource.mylearn_grades.id
+}
+
+
 ##########################################
 # users service endpoints
 resource "aws_api_gateway_resource" "mylearn_users" {
@@ -501,7 +510,39 @@ module "cors9" {
   api_resource_id = aws_api_gateway_resource.mylearn_rest_lessons.id
 }
 
+############
+resource "aws_api_gateway_resource" "mylearn_rest_lessons_lessons" {
+  parent_id   = aws_api_gateway_rest_api.mylearn.root_resource_id
+  path_part   = "lessons"
+  rest_api_id = aws_api_gateway_rest_api.mylearn.id
+}
 
+#
+resource "aws_api_gateway_method" "mylearn_rest_lessons_lessons_get" {
+  http_method   = "GET"
+  resource_id   = aws_api_gateway_resource.mylearn_rest_lessons_lessons.id
+  rest_api_id   = aws_api_gateway_rest_api.mylearn.id
+  authorization = "CUSTOM"
+  authorizer_id = aws_api_gateway_authorizer.mylearn.id
+}
+
+resource "aws_api_gateway_integration" "mylearn_rest_lessons_lessons_get" {
+  rest_api_id             = aws_api_gateway_rest_api.mylearn.id
+  resource_id             = aws_api_gateway_resource.mylearn_rest_lessons_lessons.id
+  http_method             = aws_api_gateway_method.mylearn_rest_lessons_lessons_get.http_method
+  integration_http_method = "POST"
+  type                    = "AWS_PROXY"
+  uri                     = aws_lambda_function.lessons_rest_lambda.invoke_arn
+}
+
+
+module "cors12" {
+  source  = "squidfunk/api-gateway-enable-cors/aws"
+  version = "0.3.3"
+
+  api_id          = aws_api_gateway_rest_api.mylearn.id
+  api_resource_id = aws_api_gateway_resource.mylearn_rest_lessons_lessons.id
+}
 
 ##########################################
 #### s3 bucket
@@ -616,6 +657,8 @@ resource "aws_api_gateway_deployment" "mylearn" {
     aws_api_gateway_integration.mylearn_rest_lessons_delete,
     aws_api_gateway_integration.mylearn_s3_files_get,
     aws_api_gateway_integration.mylearn_s3_folders_get,
+    aws_api_gateway_integration.mylearn_grades_post,
+    aws_api_gateway_integration.mylearn_grades_get,
   ]
 }
 
