@@ -25,12 +25,15 @@
       </template>
     </DataTable>
   </div>
+
+  <div v-if="this.group == 'teacher-group'">
   <h3>Add grade</h3>
   <h5>Subject</h5>
   <Dropdown v-model="selectedSubject" :options="subjects" optionLabel="name" optionValue="code" placeholder="Select a Subject" />
   <h5>Grade</h5>
   <Dropdown v-model="selectedGrade" :options="gradesList" optionLabel="name" optionValue="code" placeholder="Select a Subject" />
   <Button @click="addGrade" label="Add new grade" />
+  </div>
 
 </template>
 
@@ -58,6 +61,8 @@ export default {
   setup() {
     let grades = ref(null)
     let parsedGrades = ref(null)
+    let group = ref("")
+    let decodedToken = ref(null)
 
     let selectedSubject = ref(null)
     const subjects = ref([
@@ -84,6 +89,8 @@ export default {
     const route = useRoute()
 
     onMounted(() => {
+      decodedToken.value = TokenService.decodeToken(TokenService.getToken())
+      group.value = decodedToken.value['cognito:groups'][0]
       getGrades()
     })
 
@@ -115,9 +122,7 @@ export default {
 
       axios.get(process.env.VUE_APP_BACKEND_RESP_API + 'grades?' + params, config).then(resp => {
         grades.value = resp.data
-      }).then(
-
-      ).catch(err => {
+      }).catch(err => {
         console.log(err)
       })
     }
@@ -150,7 +155,8 @@ export default {
       selectedSubject,
       gradesList,
       selectedGrade,
-      addGrade
+      addGrade,
+      group
     }
   }
 };

@@ -29,7 +29,10 @@
       <Divider layout="vertical" />
     </div>
     <div class="column">
-    <h2>Upload new file</h2>
+      <div v-if="this.group == 'teacher-group'">
+
+
+      <h2>Upload new file</h2>
 <!--      <FileUpload ref="newFile" name="demo[]" @upload="onUpload" @before-upload="uploadFile2(this.files)" :multiple="true" accept="image/*" :maxFileSize="1000000">-->
 <!--        <template #empty>-->
 <!--          <p>Drag and drop files to here to upload.</p>-->
@@ -43,6 +46,7 @@
 <!--      <input ref="newFile" type="file" id="newFile">-->
       <Button @click="uploadFile()" label="Add new file" />
 
+    </div>
     </div>
   </div>
 </template>
@@ -75,22 +79,24 @@ export default {
     FileUpload
   },
   setup() {
-    // let files = ref(null)
+    let files = ref(null)
     let filesFormatted = ref([])
     const route = useRoute()
     //temp
-    let files = ref([
-    {
-      fileName: "1AB/file_new.jpg"
-    },   {
-      fileName: "1AB/new_file2.jpg"
-    }])
+    // let files = ref([
+    // {
+    //   fileName: "1AB/file_new.jpg"
+    // },   {
+    //   fileName: "1AB/new_file2.jpg"
+    // }])
     let newFile = ref(null)
-
+    let group = ref("")
+    let decodedToken = ref(null)
 
     onMounted(() => {
-      // getFiles()
-
+      getFiles()
+      decodedToken.value = TokenService.decodeToken(TokenService.getToken())
+      group.value = decodedToken.value['cognito:groups'][0]
     })
 
     function getFiles() {
@@ -116,9 +122,8 @@ export default {
     function uploadFile2(sth) {
       console.log("---------uplkoad")
       console.log(sth[0])
-
-
     }
+
     function uploadFile(sth) {
       let config = {
         headers: {
@@ -196,7 +201,8 @@ export default {
       test,
       uploadFile2,
       submitFile,
-      handleFileUpload
+      handleFileUpload,
+      group
     }
   }
 };

@@ -112,6 +112,7 @@ export default {
         timestamp: d.toLocaleString(),
         message: msg.value
       })
+      msg.value = ""
     }
 
 
