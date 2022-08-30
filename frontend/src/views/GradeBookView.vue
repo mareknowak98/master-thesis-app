@@ -7,7 +7,11 @@
                :rowsPerPageOptions="[10,20,50]" responsiveLayout="scroll"
                currentPageReportTemplate="Showing {first} to {last} of {totalRecords}">
       <Column field="Email" header="Email"></Column>
-      <Column field="Username" header="Username"></Column>
+      <Column field="Username" header="Username">
+        <template #body="slotProps">
+          <a :href="'gradeBook/' + slotProps.data.Username" v-text="slotProps.data.Username" />
+        </template>
+      </Column>
       <template #paginatorstart>
         <Button type="button" icon="pi pi-refresh" class="p-button-text" />
       </template>
