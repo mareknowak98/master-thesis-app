@@ -51,6 +51,17 @@ func HandleRequest(request events.APIGatewayProxyRequest) (events.APIGatewayProx
 		default:
 			return responseGenerator(400, "No such method"), nil
 		}
+	case "/manageGroups":
+		switch request.HTTPMethod {
+		case "POST":
+			resp, err := c.ManageGroups(request)
+			if err != nil {
+				return responseGenerator(500, err.Error()), nil
+			}
+			return responseGenerator(200, resp), nil
+		default:
+			return responseGenerator(400, "No such method"), nil
+		}
 	default:
 		return responseGenerator(400, "No such endpoint"), nil
 	}

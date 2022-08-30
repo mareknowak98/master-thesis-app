@@ -213,7 +213,8 @@ resource "aws_iam_role_policy" "mylearn_cognito_user" {
         "Action" = [
           "cognito-idp:InitiateAuth",
           "cognito-idp:AdminConfirmSignUp",
-          "cognito-idp:AdminAddUserToGroup"
+          "cognito-idp:AdminAddUserToGroup",
+          "cognito-idp:AdminRemoveUserFromGroup"
         ]
         "Resource" = "*"
       }
@@ -247,13 +248,20 @@ resource "aws_iam_role_policy" "mylearn_rest_lessons" {
           "dynamodb:UpdateItem",
         ],
         "Resource" = aws_dynamodb_table.mylearn_lessons.arn
+      },
+      {
+        "Effect" = "Allow",
+        "Action" = [
+          "dynamodb:Scan"
+        ],
+        "Resource" = aws_dynamodb_table.mylearn_lessons_connections.arn
       }
     ]
   })
 }
 
 
-# chat-lessons-lambda IAM
+# mylearn-lessons-lambda IAM
 resource "aws_iam_role" "mylearn_lessons" {
   name = format("%s-%s", "mylearn-lessons", var.region)
 

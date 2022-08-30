@@ -190,6 +190,7 @@ resource "aws_lambda_function" "lessons_rest_lambda" {
     variables = {
       REGION        = var.region
       LESSONS_TABLE = aws_dynamodb_table.mylearn_lessons.name
+      LESSONS_CONNECTIONS_TABLE = aws_dynamodb_table.mylearn_lessons_connections.name
     }
   }
 }

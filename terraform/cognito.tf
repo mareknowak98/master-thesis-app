@@ -9,6 +9,7 @@ resource "aws_cognito_user_pool" "mylearn" {
 
   alias_attributes = ["email"]
 
+
   # days to reset default password given by admin
   password_policy {
     minimum_length                   = 8
@@ -74,4 +75,8 @@ resource "aws_cognito_user_pool_client" "webapp" {
 
   # time of token life
   refresh_token_validity = 10
+
+  access_token_validity = 24
+
+
 }

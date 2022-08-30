@@ -1,8 +1,10 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/aws/aws-lambda-go/events"
+	"mylearnproject/lambdas/cognito-user-lambda/cmd"
 	"os"
 	"testing"
 )
@@ -32,6 +34,21 @@ func TestHandleRequest(t *testing.T) {
 //	return request
 //}
 
+//func getDebugInput() events.APIGatewayProxyRequest {
+//	var request events.APIGatewayProxyRequest
+//	_ = os.Setenv("USER_TABLE", "cognito-users")
+//	_ = os.Setenv("USER_POOL_ID", "eu-central-1_LsCgMRDvD")
+//	_ = os.Setenv("REGION", "eu-central-1")
+//	_ = os.Setenv("COGNITO_CLIENT_ID", "2jc39495jj7r6rpltst6b8ps80")
+//
+//	request.HTTPMethod = "POST"
+//	request.Path = "/register"
+//
+//	request.Body = "{\n   \"username\" : \"testuser4\",\n   \"email\" : \"mark.now997@gmail.com\",\n   \"password1\" : \"Passw0rd!\",\n   \"password2\" : \"Passw0rd!\"\n}"
+//
+//	return request
+//}
+
 func getDebugInput() events.APIGatewayProxyRequest {
 	var request events.APIGatewayProxyRequest
 	_ = os.Setenv("USER_TABLE", "cognito-users")
@@ -40,9 +57,24 @@ func getDebugInput() events.APIGatewayProxyRequest {
 	_ = os.Setenv("COGNITO_CLIENT_ID", "2jc39495jj7r6rpltst6b8ps80")
 
 	request.HTTPMethod = "POST"
-	request.Path = "/register"
+	request.Path = "/manageGroups"
 
-	request.Body = "{\n   \"username\" : \"testuser4\",\n   \"email\" : \"mark.now997@gmail.com\",\n   \"password1\" : \"Passw0rd!\",\n   \"password2\" : \"Passw0rd!\"\n}"
+	var inp cmd.ManageGroupsRequest
+	err := json.Unmarshal([]byte(`
+			{
+			   "operation" : "addToGroup",
+			   "username" : "testuser10",
+			   "groupName" : "teacher-group"
+			}`), &inp)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+	b, err := json.Marshal(inp)
+	if err != nil {
+		fmt.Println(err)
+	}
+	request.Body = string(b)
 
 	return request
 }

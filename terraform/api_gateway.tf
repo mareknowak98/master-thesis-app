@@ -236,7 +236,38 @@ module "cors2" {
   api_id          = aws_api_gateway_rest_api.mylearn.id
   api_resource_id = aws_api_gateway_resource.mylearn_cognito_users_register.id
 }
+######
+resource "aws_api_gateway_resource" "mylearn_cognito_manage_groups" {
+  parent_id   = aws_api_gateway_rest_api.mylearn.root_resource_id
+  path_part   = "manageGroups"
+  rest_api_id = aws_api_gateway_rest_api.mylearn.id
+}
 
+resource "aws_api_gateway_method" "mylearn_cognito_manage_groups_post" {
+  http_method   = "POST"
+  resource_id   = aws_api_gateway_resource.mylearn_cognito_manage_groups.id
+  rest_api_id   = aws_api_gateway_rest_api.mylearn.id
+  authorization = "NONE"
+}
+
+
+resource "aws_api_gateway_integration" "mylearn_cognito_manage_groups_post" {
+  rest_api_id             = aws_api_gateway_rest_api.mylearn.id
+  resource_id             = aws_api_gateway_resource.mylearn_cognito_manage_groups.id
+  http_method             = aws_api_gateway_method.mylearn_cognito_manage_groups_post.http_method
+  integration_http_method = "POST"
+  type                    = "AWS_PROXY"
+  uri                     = aws_lambda_function.cognito_user_lambda.invoke_arn
+}
+
+
+module "cors14" {
+  source  = "squidfunk/api-gateway-enable-cors/aws"
+  version = "0.3.3"
+
+  api_id          = aws_api_gateway_rest_api.mylearn.id
+  api_resource_id = aws_api_gateway_resource.mylearn_cognito_manage_groups.id
+}
 
 #####
 
@@ -659,6 +690,7 @@ resource "aws_api_gateway_deployment" "mylearn" {
     aws_api_gateway_integration.mylearn_s3_folders_get,
     aws_api_gateway_integration.mylearn_grades_post,
     aws_api_gateway_integration.mylearn_grades_get,
+    aws_api_gateway_integration.mylearn_cognito_manage_groups_post,
   ]
 }
 
