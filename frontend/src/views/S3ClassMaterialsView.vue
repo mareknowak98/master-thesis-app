@@ -36,17 +36,12 @@
 <!--        </template>-->
 <!--      </FileUpload>-->
 
-<!--      <div class="mb-3">-->
-<!--        <label for="formFile" class="form-label">Default file input example</label>-->
-<!--        <input ref="newFile" class="form-control" type="file" id="newFile">-->
-<!--      </div>-->
-      <input ref="newFile" type="file" id="newFile">
+      <div class="mb-3">
+        <label for="formFile" class="form-label">Upload file</label>
+        <input ref="newFile" class="form-control" type="file" id="newFile">
+      </div>
+<!--      <input ref="newFile" type="file" id="newFile">-->
       <Button @click="uploadFile()" label="Add new file" />
-
-<!--      <label>File-->
-<!--        <input type="file" @change="handleFileUpload( $event )"/>-->
-<!--      </label>-->
-<!--      <Button @click="submitFile()" label="Add new file" />-->
 
     </div>
   </div>
@@ -125,29 +120,19 @@ export default {
 
     }
     function uploadFile(sth) {
-      // newFile.value = this.$refs.file.files[0];
-
       let config = {
         headers: {
           Authorization: TokenService.getToken(),
           'Content-Type': 'multipart/form-data'
         }
       }
-      console.log(config)
 
-      console.log("---------upload2")
-      console.log("selected file",newFile.value.files)
       let filename = newFile.value.files[0].name
-      console.log("selected filename",filename)
       const formData = new FormData();
       formData.append('src', newFile.value.files[0]);
-      console.log("---------filepath")
 
       let filepath = process.env.VUE_APP_S3_BUCKET_NAME + "/" + route.params.classId + '/' + filename
-      console.log(filepath)
-
       let path = process.env.VUE_APP_S3_API + 's3?key=' + filepath
-      console.log(path)
 
       axios.put(path, formData, config).then(resp => {
         console.log(resp)

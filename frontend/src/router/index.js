@@ -15,6 +15,7 @@ import ClassesManage from "@/views/ClassesManageView";
 import ClassManageView from "@/views/ClassManageView";
 import S3MaterialsMainTeacherView from "@/views/S3MaterialsMainTeacherView";
 import S3ClassMaterialsView from "@/views/S3ClassMaterialsView";
+import GradeUserView from "@/views/GradeUserView";
 
 const routes = [
   {
@@ -96,6 +97,11 @@ const routes = [
     path: "/classContent/:classId",
     name: "classContentFiles",
     component: S3ClassMaterialsView,
+  },
+  {
+    path: "/gradeBook/:userId",
+    name: "gradeUserView",
+    component: GradeUserView,
   },
 ];
 

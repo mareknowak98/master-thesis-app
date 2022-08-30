@@ -2,48 +2,6 @@
   <LoggedNavbar/>
   <h1>Chatting with user {{this.$route.params.userId}}</h1>
 
-<!--  <section ref="chatArea" class="chat-area">-->
-
-<!--  <b-col>-->
-<!--    <div>-->
-<!--      <p v-for="message in rest_messages" class="message">-->
-<!--        <div v-if="message.userFromTo == msgRec">-->
-<!--          <div class="message-in"> {{ message.message }} </div>-->
-<!--        </div>-->
-<!--        <div v-if="message.userFromTo == msgSent">-->
-<!--          <div class="message-out"> {{ message.message }} </div>-->
-<!--        </div>-->
-
-<!--      </p>-->
-<!--    </div>-->
-<!--  </b-col>-->
-<!--  </section>-->
-
-<!--  <table class="table table-striped table-bordered">-->
-<!--    <thead>-->
-<!--    <tr>-->
-<!--      <th>UserFrom:UserTo</th>-->
-<!--      <th>Date</th>-->
-<!--      <th>Message</th>-->
-<!--    </tr>-->
-<!--    </thead>-->
-<!--    <tbody>-->
-
-<!--    <tr v-for="msg in rest_messages" :key="msg.id">-->
-<!--      <td>{{msg.userFromTo}}</td>-->
-<!--      <td>{{msg.timestamp}}</td>-->
-<!--      <td>{{msg.message}}</td>-->
-<!--    </tr>-->
-<!--    </tbody>-->
-<!--  </table>-->
-
-<!--  <div class="card">-->
-<!--    <DataTable :value="rest_messages" scrollable scrollHeight="400px" :virtualScrollerOptions="{ itemSize: 46 }">-->
-<!--      <Column field="userFromTo" header="userFromTo"></Column>-->
-<!--      <Column field="message" header="message"></Column>-->
-<!--    </DataTable>-->
-<!--  </div>-->
-
 
   <div class="panel">
     <div class="messages" ref="messagesRef">
