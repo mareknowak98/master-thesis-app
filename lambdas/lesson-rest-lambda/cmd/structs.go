@@ -7,3 +7,7 @@ type LessonSlide struct {
 	SlideContent    string `json:"slideContent"`
 	QuestionAnswers string `json:"questionAnswers"`
 }
+
+type LessonId struct {
+	LessonId string `json:"lessonId"`
+}

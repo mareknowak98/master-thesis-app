@@ -31,20 +31,40 @@ resource "aws_api_gateway_rest_api" "mylearn_s3" {
                       "$ref" : "#/components/schemas/Empty"
                     }
                   }
+                },
+                "headers": {
+                  "Access-Control-Allow-Origin": {
+                    "schema": {
+                      "type": "string"
+                    }
+                  }
                 }
               },
               "500" : {
+                "headers": {
+                  "Access-Control-Allow-Origin": {
+                    "schema": {
+                      "type": "string"
+                    }
+                  }
+                },
                 "description" : "500 response"
               }
             },
             "x-amazon-apigateway-integration" : {
               "credentials" : aws_iam_role.s3_content_gateway.arn,
-              "responses" : {
-                "default" : {
-                  "statusCode" : "500"
+              "responses": {
+                "default": {
+                  "statusCode": "500",
+                  "responseParameters" : {
+                    "method.response.header.Access-Control-Allow-Origin": "'*'"
+                  }
                 },
-                "2\\d{2}" : {
-                  "statusCode" : "200"
+                "2\\d{2}": {
+                  "statusCode": "200",
+                  "responseParameters" : {
+                    "method.response.header.Access-Control-Allow-Origin": "'*'"
+                  }
                 }
               },
               "requestParameters" : {
@@ -76,6 +96,13 @@ resource "aws_api_gateway_rest_api" "mylearn_s3" {
                       "$ref" : "#/components/schemas/Empty"
                     }
                   },
+                  "headers": {
+                    "Access-Control-Allow-Origin": {
+                      "schema": {
+                        "type": "string"
+                      }
+                    }
+                  },
                   "application/octet-stream" : {
                     "schema" : {
                       "$ref" : "#/components/schemas/Empty"
@@ -84,17 +111,30 @@ resource "aws_api_gateway_rest_api" "mylearn_s3" {
                 }
               },
               "500" : {
-                "description" : "500 response"
+                "description" : "500 response",
+                "headers": {
+                  "Access-Control-Allow-Origin": {
+                    "schema": {
+                      "type": "string"
+                    }
+                  }
+                }
               }
             },
             "x-amazon-apigateway-integration" : {
               "credentials" : aws_iam_role.s3_content_gateway.arn,
-              "responses" : {
-                "default" : {
-                  "statusCode" : "500"
+              "responses": {
+                "default": {
+                  "statusCode": "500",
+                  "responseParameters" : {
+                    "method.response.header.Access-Control-Allow-Origin": "'*'"
+                  }
                 },
-                "2\\d{2}" : {
-                  "statusCode" : "200"
+                "2\\d{2}": {
+                  "statusCode": "200",
+                  "responseParameters" : {
+                    "method.response.header.Access-Control-Allow-Origin": "'*'"
+                  }
                 }
               },
               "requestParameters" : {
@@ -118,6 +158,36 @@ resource "aws_api_gateway_rest_api" "mylearn_s3" {
             "type" : "object",
             "title" : "Empty Schema"
           }
+        },
+        #        "securitySchemes": {
+        #          "UserPool": {
+        #            "type": "apiKey",
+        #            "name": "Authorization",
+        #            "x-amazon-apigateway-authtype": "cognito_user_pools",
+        #            "x-amazon-apigateway-authorizer": {
+        #              "type": "cognito_user_pools",
+        #              "providerARNs": [
+        #                  aws_cognito_user_pool.mylearn.arn
+        #                ],
+        #              "identitySource": "$request.header.Authorization"
+        #            }
+        #          }
+        #        }
+        "securitySchemes" : {
+          "jwt-authorizer-oauth" : {
+            "type" : "oauth2",
+            "x-amazon-apigateway-authorizer" : {
+              "type" : "jwt",
+              "jwtConfiguration" : {
+                "issuer" : "https://cognito-idp.region.amazonaws.com/userPoolId",
+                "audience" : [
+                  "audience1",
+                  "audience2"
+                ]
+              },
+              "identitySource" : "$request.header.Authorization"
+            }
+          }
         }
       }
     }
@@ -127,28 +197,24 @@ resource "aws_api_gateway_rest_api" "mylearn_s3" {
 
 
 ## API deployment
-resource "aws_api_gateway_stage" "mylearn_s3" {
-  deployment_id = aws_api_gateway_deployment.mylearn_s3.id
-  rest_api_id   = aws_api_gateway_rest_api.mylearn_s3.id
-  stage_name    = var.deployment
-}
+#resource "aws_api_gateway_stage" "mylearn_s3" {
+#  deployment_id = aws_api_gateway_deployment.mylearn_s3.id
+#  rest_api_id   = aws_api_gateway_rest_api.mylearn_s3.id
+#  stage_name    = var.deployment
+#}
 
-## deploy each run - might be added conditions
+##
 resource "aws_api_gateway_deployment" "mylearn_s3" {
   rest_api_id = aws_api_gateway_rest_api.mylearn_s3.id
-
-  variables = {
-    deployed_at = timestamp()
-  }
-
-  depends_on = [
-    data.aws_api_gateway_resource.s3,
-  ]
 
   lifecycle {
     create_before_destroy = true
   }
 
+  depends_on = [
+    data.aws_api_gateway_resource.s3,
+    aws_api_gateway_rest_api.mylearn_s3
+  ]
 }
 
 data "aws_api_gateway_resource" "s3" {

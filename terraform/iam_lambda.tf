@@ -167,8 +167,19 @@ resource "aws_iam_role_policy" "mylearn_users" {
           "dynamodb:DeleteItem",
           "dynamodb:Scan",
           "dynamodb:UpdateItem",
+          "dynamodb:Query"
         ],
         "Resource" = aws_dynamodb_table.mylearn_classes.arn
+      },
+      {
+        "Effect" = "Allow",
+        "Action" = [
+          "dynamodb:Query",
+          "dynamodb:UpdateItem"
+        ],
+        "Resource" = [
+          aws_dynamodb_table.cognito_users.arn
+        ]
       },
       {
         "Effect" = "Allow",
@@ -230,6 +241,7 @@ resource "aws_iam_role_policy" "mylearn_rest_lessons" {
         "Effect" = "Allow",
         "Action" = [
           "dynamodb:PutItem",
+          "dynamodb:Query",
           "dynamodb:DeleteItem",
           "dynamodb:Scan",
           "dynamodb:UpdateItem",
@@ -292,7 +304,7 @@ resource "aws_iam_role_policy" "mylearn_lessons" {
   })
 }
 
-#s3-content-lambda IAM
+#s3-content-gateway IAM
 resource "aws_iam_role" "s3_content_gateway" {
   name = format("%s-%s", "s3-content-gateway", var.region)
 
@@ -319,4 +331,33 @@ resource "aws_iam_role_policy" "s3_content_gateway" {
     ]
   })
 }
+
+#s3-content-lambda IAM
+resource "aws_iam_role" "s3_management_lambda" {
+  name = format("%s-%s", "s3-management-lambda", var.region)
+
+  assume_role_policy  = file("files/AWSLambdaTrustPolicy.json")
+  managed_policy_arns = ["arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"]
+}
+
+resource "aws_iam_role_policy" "s3_management_lambda" {
+  name = format("%s-%s", "s3-management-lambda", var.region)
+  role = aws_iam_role.s3_management_lambda.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        "Effect" = "Allow",
+        "Action" = [
+          "s3:ListBucket"
+        ],
+
+        "Resource" = format("%s", aws_s3_bucket.mylearn_materials.arn)
+      }
+    ]
+  })
+}
+
+
 

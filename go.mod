@@ -1,6 +1,6 @@
 module mylearnproject
 
-go 1.17
+go 1.18
 
 require (
 	github.com/MicahParks/keyfunc v1.1.0
@@ -15,6 +15,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.27.5
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/golang-jwt/jwt/v4 v4.4.2
+	golang.org/x/exp v0.0.0-20220826205824-bd9bcdd0b820
 )
 
 require (

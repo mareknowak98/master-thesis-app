@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
-	"mylearnproject/lambdas/lesson-rest-lambda/cmd"
+	"mylearnproject/lambdas/s3-management-lambda/cmd"
 	"os"
 )
 
@@ -20,7 +20,7 @@ func responseGenerator(code int, message string) events.APIGatewayProxyResponse 
 }
 
 func HandleRequest(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	tableName := os.Getenv("LESSONS_TABLE")
+	s3Name := os.Getenv("MYLEARN_BUCKET")
 	region := os.Getenv("REGION")
 
 	fmt.Printf("Request: %#v\n", request)
@@ -28,22 +28,10 @@ func HandleRequest(request events.APIGatewayProxyRequest) (events.APIGatewayProx
 	c := cmd.NewClient(region)
 
 	switch request.Path {
-	case "/slides":
+	case "/files":
 		switch request.HTTPMethod {
-		case "POST":
-			resp, err := c.SaveLessonSlide(request, tableName)
-			if err != nil {
-				return responseGenerator(500, err.Error()), nil
-			}
-			return responseGenerator(200, resp), nil
-		case "DELETE":
-			resp, err := c.DeleteSlide(request, tableName)
-			if err != nil {
-				return responseGenerator(500, err.Error()), nil
-			}
-			return responseGenerator(200, resp), nil
 		case "GET":
-			resp, err := c.GetSlide(request, tableName)
+			resp, err := c.GetFiles(request, s3Name)
 			if err != nil {
 				return responseGenerator(500, err.Error()), nil
 			}
@@ -51,10 +39,10 @@ func HandleRequest(request events.APIGatewayProxyRequest) (events.APIGatewayProx
 		default:
 			return responseGenerator(400, "No such method"), nil
 		}
-	case "/lessons":
+	case "/folders":
 		switch request.HTTPMethod {
 		case "GET":
-			resp, err := c.GetLessons(request, tableName)
+			resp, err := c.GetFolders(request, s3Name)
 			if err != nil {
 				return responseGenerator(500, err.Error()), nil
 			}
@@ -62,7 +50,6 @@ func HandleRequest(request events.APIGatewayProxyRequest) (events.APIGatewayProx
 		default:
 			return responseGenerator(400, "No such method"), nil
 		}
-
 	default:
 		return responseGenerator(400, "No such endpoint"), nil
 	}
