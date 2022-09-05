@@ -93,7 +93,7 @@ export default {
     })
 
     watch(rest_messages.value, (oldValue, prevSelection) => {
-      console.log("essa")
+      console.log("123")
     })
 
     function sendMessage() {
