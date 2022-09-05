@@ -16,6 +16,10 @@ import ClassManageView from "@/views/ClassManageView";
 import S3MaterialsMainTeacherView from "@/views/S3MaterialsMainTeacherView";
 import S3ClassMaterialsView from "@/views/S3ClassMaterialsView";
 import GradeUserView from "@/views/GradeUserView";
+import StartLessonTeacherView from "@/views/StartLessonTeacherView";
+import ConductLessonView from "@/views/ConductLessonView.vue";
+import AttendLessonView from "@/views/AttendLessonView";
+import CurrentLessonsView from "@/views/CurrentLessonsView";
 
 const routes = [
   {
@@ -102,6 +106,26 @@ const routes = [
     path: "/gradeBook/:userId",
     name: "gradeUserView",
     component: GradeUserView,
+  },
+  {
+    path: "/startLesson",
+    name: "startLesson",
+    component: StartLessonTeacherView,
+  },
+  {
+    path: "/conductLesson/:presentationId",
+    name: "conductLesson",
+    component: ConductLessonView,
+  },
+  {
+    path: "/lesson/:presentationId",
+    name: "lesson",
+    component: AttendLessonView,
+  },
+  {
+    path: "/lessons",
+    name: "lessons",
+    component: CurrentLessonsView,
   },
 ];
 

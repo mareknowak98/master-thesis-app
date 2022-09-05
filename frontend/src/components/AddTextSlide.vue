@@ -63,6 +63,11 @@ export default {
 
       let maxSlide = Math.max.apply(Math, currentPresentationSlides.value.map(function(o) { return parseInt(o.slideId); }))
       maxSlide++
+
+      if (maxSlide < 1 || maxSlide > 1000){
+        maxSlide = 1
+      }
+
       let m = {
         lessonId: presentationId.value,
         slideId: maxSlide.toString(),
