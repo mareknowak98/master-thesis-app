@@ -127,3 +127,45 @@ resource "aws_dynamodb_table" "mylearn_lessons" {
     AppName = "mylearn-app"
   }
 }
+
+resource "aws_dynamodb_table" "mylearn_tests" {
+  name         = "mylearn-tests"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "TestId"
+  range_key    = "CombinedKey"
+
+  attribute {
+    name = "TestId"
+    type = "S"
+  }
+
+  attribute {
+    name = "CombinedKey"
+    type = "S"
+  }
+
+  tags = {
+    AppName = "mylearn-app"
+  }
+}
+
+resource "aws_dynamodb_table" "mylearn_tests_results" {
+  name         = "mylearn-tests-results"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "TestId"
+  range_key    = "UserId"
+
+  attribute {
+    name = "TestId"
+    type = "S"
+  }
+
+  attribute {
+    name = "UserId"
+    type = "S"
+  }
+
+  tags = {
+    AppName = "mylearn-app"
+  }
+}
