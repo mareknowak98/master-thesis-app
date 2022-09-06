@@ -18,3 +18,20 @@ type TestQuestionOutput struct {
 type TestId struct {
 	TestId string `json:"testId"`
 }
+
+type CheckTestInput struct {
+	TestId         string           `json:"testId"`
+	QuestionAnswer []QuestionAnswer `json:"questionAnswer"`
+}
+
+type QuestionAnswer struct {
+	CombinedKey           string `json:"combinedKey"`
+	CorrectQuestionAnswer string `json:"correctQuestionAnswer"`
+}
+
+type TestResult struct {
+	TestId string `json:"testId"`
+	UserId string `json:"userId"`
+	Result string `json:"result"`
+	//QuestionAnswers string `json:"questionAnswers"`
+}

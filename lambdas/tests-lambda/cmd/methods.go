@@ -92,3 +92,110 @@ func (c *Client) DeleteQuestion(request events.APIGatewayProxyRequest) (string, 
 	}
 	return "", nil
 }
+
+func (c *Client) CheckTest(request events.APIGatewayProxyRequest) (string, error) {
+	testsTableName := os.Getenv("TESTS_TABLE")
+	resultsTableName := os.Getenv("RESULTS_TABLE")
+
+	// Format given request body to LessonSlide struct
+	var testAnswer CheckTestInput
+	err := json.Unmarshal([]byte(request.Body), &testAnswer)
+	if err != nil {
+		return "", err
+	}
+
+	hashKey := map[string]string{"keyName": "TestId", "value": testAnswer.TestId}
+	sortKey := map[string]string{}
+
+	result, err := c.queryDynamo(hashKey, sortKey, testsTableName)
+
+	var testQuestions []TestQuestionInput
+
+	// Unmarshall list of Maps to InputGrades structure
+	err = attributevalue.UnmarshalListOfMaps(result.Items, &testQuestions)
+	if err != nil {
+		return "", err
+	}
+
+	numberCorrect := 0
+
+	for _, elem := range testQuestions {
+		var tmpAnswer string
+		for _, a := range testAnswer.QuestionAnswer {
+			if a.CombinedKey == elem.CombinedKey {
+				tmpAnswer = a.CorrectQuestionAnswer
+			}
+		}
+
+		if tmpAnswer == elem.CorrectAnswer {
+			numberCorrect++
+		}
+	}
+
+	decodedToken, err := DecodeToken(request.Headers["Authorization"])
+	if err != nil {
+		return "Token malformed", err
+	}
+	//User sending request
+	requestUser := decodedToken["username"]
+
+	var dbInput TestResult
+	dbInput.TestId = testAnswer.TestId
+	tmp := float32(len(testQuestions)) / float32(numberCorrect)
+	dbInput.Result = fmt.Sprintf("%f", tmp)
+	dbInput.UserId = requestUser.(string)
+
+	// Save lesson slide to dynamoDB
+	err = c.saveToDynamo(dbInput, resultsTableName)
+	if err != nil {
+		return "", err
+	}
+
+	return "", nil
+}
+
+func (c *Client) GetResults(request events.APIGatewayProxyRequest) (string, error) {
+	resultsTableName := os.Getenv("RESULTS_TABLE")
+
+	if len(request.QueryStringParameters) == 0 {
+		return "", fmt.Errorf("not enough parameters\n")
+	}
+
+	if request.QueryStringParameters["userId"] != "" && request.QueryStringParameters["testId"] != "" {
+		hashKey := map[string]string{"keyName": "TestId", "value": request.QueryStringParameters["testId"]}
+		sortKey := map[string]string{"keyName": "UserId", "value": request.QueryStringParameters["userId"]}
+
+		result, err := c.queryDynamo(hashKey, sortKey, resultsTableName)
+
+		var resp []TestResult
+		err = attributevalue.UnmarshalListOfMaps(result.Items, &resp)
+
+		jsonOut, err := json.Marshal(resp)
+
+		if err != nil {
+			return "", err
+		}
+
+		return string(jsonOut), nil
+	}
+
+	if request.QueryStringParameters["testId"] != "" {
+		hashKey := map[string]string{"keyName": "TestId", "value": request.QueryStringParameters["testId"]}
+		sortKey := map[string]string{}
+
+		result, err := c.queryDynamo(hashKey, sortKey, resultsTableName)
+
+		var resp []TestResult
+		err = attributevalue.UnmarshalListOfMaps(result.Items, &resp)
+
+		jsonOut, err := json.Marshal(resp)
+
+		if err != nil {
+			return "", err
+		}
+
+		return string(jsonOut), nil
+	}
+
+	return "", nil
+}
