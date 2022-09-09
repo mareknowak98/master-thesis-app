@@ -22,6 +22,9 @@ import AttendLessonView from "@/views/AttendLessonView";
 import CurrentLessonsView from "@/views/CurrentLessonsView";
 import ManageUsersView from "@/views/ManageUsersView";
 import ManageUserView from "@/views/ManageUserView";
+import CreateTestsView from "@/views/CreateTestsView";
+import CreateTestView from "@/views/CreateTestView";
+import StudentTestListView from "@/views/StudentTestListView";
 
 const routes = [
   {
@@ -138,6 +141,21 @@ const routes = [
     path: "/manageUsers/:userId",
     name: "manageUser",
     component: ManageUserView,
+  },
+  {
+    path: "/createTests",
+    name: "createTests",
+    component: CreateTestsView,
+  },
+  {
+    path: "/createTest/:classId",
+    name: "createTest",
+    component: CreateTestView,
+  },
+  {
+    path: "/testsList/:classId",
+    name: "testsList",
+    component: StudentTestListView,
   },
 ];
 
