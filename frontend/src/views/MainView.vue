@@ -7,6 +7,9 @@
     <div v-if="this.group == 'student-group'">
       <StudentMenu/>
     </div>
+    <div v-if="this.group == 'admin-group'">
+      <AdminView/>
+    </div>
   </div>
 </template>
 
@@ -17,6 +20,7 @@
 import TeacherMenu from "@/components/TeacherMenu";
 import StudentMenu from "@/components/StudentMenu";
 import LoggedNavbar from "@/components/LoggedNavbar";
+import AdminView from "@/components/AdminView";
 
 import { ref, onMounted } from "vue";
 import { TokenService } from "@/store/tokenService";
@@ -29,6 +33,7 @@ export default {
     TeacherMenu,
     StudentMenu,
     LoggedNavbar,
+    AdminView,
     TabMenu
   },
   data() {

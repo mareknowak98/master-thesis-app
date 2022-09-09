@@ -20,6 +20,8 @@ import StartLessonTeacherView from "@/views/StartLessonTeacherView";
 import ConductLessonView from "@/views/ConductLessonView.vue";
 import AttendLessonView from "@/views/AttendLessonView";
 import CurrentLessonsView from "@/views/CurrentLessonsView";
+import ManageUsersView from "@/views/ManageUsersView";
+import ManageUserView from "@/views/ManageUserView";
 
 const routes = [
   {
@@ -126,6 +128,16 @@ const routes = [
     path: "/lessons",
     name: "lessons",
     component: CurrentLessonsView,
+  },
+  {
+    path: "/manageUsers",
+    name: "manageUsers",
+    component: ManageUsersView,
+  },
+  {
+    path: "/manageUsers/:userId",
+    name: "manageUser",
+    component: ManageUserView,
   },
 ];
 
