@@ -14,6 +14,6 @@ output "s3_api_url" {
   value = aws_api_gateway_deployment.mylearn_s3.invoke_url
 }
 
-#output "cloudfront_url" {
-#  value = aws_cloudfront_distribution.mylearn.domain_name
-#}
+output "cloudfront_url" {
+  value = aws_cloudfront_distribution.mylearn.domain_name
+}

@@ -166,6 +166,6 @@ resource "aws_dynamodb_table" "mylearn_tests_results" {
   }
 
   tags = {
-    AppName = "mylearn-app"
+    AppName = "mylearn-app-change-tag"
   }
 }
