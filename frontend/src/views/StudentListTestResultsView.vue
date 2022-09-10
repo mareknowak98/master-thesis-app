@@ -7,7 +7,7 @@
              currentPageReportTemplate="Showing {first} to {last} of {totalRecords}">
     <Column field="testId" header="Test Id">
       <template #body="slotProps">
-        <a :href="'takeTest/' + slotProps.data.testId" v-text="slotProps.data.testId" />
+        <a :href="'testResultList/' + slotProps.data.testId" v-text="slotProps.data.testId" />
       </template>
     </Column>
     <template #paginatorstart>
@@ -33,7 +33,7 @@ import { TokenService } from "@/store/tokenService";
 import { useRoute } from "vue-router/dist/vue-router";
 
 export default {
-  name: "StudentTestListView",
+  name: "StudentListTestResultView",
   components: {
     LoggedNavbar,
     DataTable,
@@ -42,10 +42,29 @@ export default {
   setup() {
     let tests = ref(null)
     const route = useRoute()
+    let myClass = ref(null)
 
     onMounted(() => {
+      getClass()
       getTests()
     })
+
+    function getClass(){
+      let config = {
+        headers: {
+          Authorization: TokenService.getToken(),
+        }
+      }
+      const params = new URLSearchParams({
+        info: "class"
+      }).toString()
+
+      axios.get(process.env.VUE_APP_BACKEND_RESP_API + 'me?' + params, config).then(resp => {
+        myClass.value = resp.data
+      }).catch(err => {
+        console.log(err)
+      })
+    }
 
     function getTests(){
       let config = {
@@ -58,7 +77,7 @@ export default {
       }).then(resp =>{
         tests.value = tests.value.filter(function (el)
         {
-          return el.combinedKey.startsWith(route.params.classId)
+          return el.combinedKey.startsWith(myClass.value)
         })
 
         tests.value = tests.value.filter((value, index, self) =>
@@ -73,6 +92,7 @@ export default {
 
     return {
       tests,
+      myClass
     }
   }
 };

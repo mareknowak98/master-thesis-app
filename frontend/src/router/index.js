@@ -25,6 +25,9 @@ import ManageUserView from "@/views/ManageUserView";
 import CreateTestsView from "@/views/CreateTestsView";
 import CreateTestView from "@/views/CreateTestView";
 import StudentTestListView from "@/views/StudentTestListView";
+import StudentTakeTestView from "@/views/StudentTakeTestView";
+import StudentListTestResultsView from "@/views/StudentListTestResultsView.vue";
+import StudentTestResultsView from "@/views/StudentTestResultsView";
 
 const routes = [
   {
@@ -157,6 +160,21 @@ const routes = [
     name: "testsList",
     component: StudentTestListView,
   },
+  {
+    path: "/testsList/takeTest/:testId",
+    name: "takeTest",
+    component: StudentTakeTestView,
+  },
+  {
+    path: "/testResultList",
+    name: "testResultList",
+    component: StudentListTestResultsView,
+  },
+  {
+    path: "/testResultList/:testId",
+    name: "testResult",
+    component: StudentTestResultsView,
+  }
 ];
 
 const router = createRouter({

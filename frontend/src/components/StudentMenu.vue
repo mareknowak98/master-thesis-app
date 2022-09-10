@@ -41,11 +41,13 @@
         </router-link>
       </div>
       <div class="col-12 md:col-4 mb-4 px-5">
+        <router-link to="/testResultList">
             <span class="p-3 shadow-2 mb-3 inline-block surface-card" style="border-radius: 10px">
                 <i class="pi pi-github text-4xl text-blue-500"></i>
             </span>
-        <div class="text-900 mb-3 font-medium">ZYX</div>
-        <span class="text-700 text-sm line-height-3">XYZ</span>
+        <div class="text-900 mb-3 font-medium">Test results</div>
+        <span class="text-700 text-sm line-height-3"></span>
+        </router-link>
       </div>
       <div class="col-12 md:col-4 md:mb-4 mb-0 px-3">
         <router-link :to="'/classContent/'+ this.myClass">
