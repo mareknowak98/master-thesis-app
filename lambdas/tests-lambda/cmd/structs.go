@@ -16,7 +16,8 @@ type TestQuestionOutput struct {
 }
 
 type TestId struct {
-	TestId string `json:"testId"`
+	TestId      string `json:"testId"`
+	CombinedKey string `json:"combinedKey"`
 }
 
 type CheckTestInput struct {

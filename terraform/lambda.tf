@@ -188,8 +188,8 @@ resource "aws_lambda_function" "lessons_rest_lambda" {
 
   environment {
     variables = {
-      REGION        = var.region
-      LESSONS_TABLE = aws_dynamodb_table.mylearn_lessons.name
+      REGION                    = var.region
+      LESSONS_TABLE             = aws_dynamodb_table.mylearn_lessons.name
       LESSONS_CONNECTIONS_TABLE = aws_dynamodb_table.mylearn_lessons_connections.name
     }
   }
@@ -244,3 +244,25 @@ resource "aws_lambda_function" "s3_management" {
   }
 }
 
+resource "aws_lambda_function" "tests_lambda" {
+  # Find .zip file with name in 'tests-lambda*.zip' format
+  filename      = format("%s/%s", "../lambdas/lambda_build", one(fileset("../lambdas/lambda_build", "{tests-lambda}*.zip")))
+  function_name = "tests-lambda"
+  handler       = "main"
+  runtime       = "go1.x"
+  role          = aws_iam_role.mylearn_tests_lambda.arn
+  timeout       = 15
+  memory_size   = 128
+
+  tags = {
+    AppName = "mylearn-app"
+  }
+
+  environment {
+    variables = {
+      REGION        = var.region
+      TESTS_TABLE   = aws_dynamodb_table.mylearn_tests.name
+      RESULTS_TABLE = aws_dynamodb_table.mylearn_tests_results.name
+    }
+  }
+}

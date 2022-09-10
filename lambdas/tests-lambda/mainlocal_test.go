@@ -60,15 +60,15 @@ func TestHandleRequest(t *testing.T) {
 //	return request
 //}
 
-//func getDebugInput() events.APIGatewayProxyRequest {
-//	var request events.APIGatewayProxyRequest
-//	_ = os.Setenv("TESTS_TABLE", "mylearn-tests")
-//	_ = os.Setenv("REGION", "eu-central-1")
-//
-//	request.HTTPMethod = "GET"
-//	request.Path = "/tests"
-//	return request
-//}
+func getDebugInput() events.APIGatewayProxyRequest {
+	var request events.APIGatewayProxyRequest
+	_ = os.Setenv("TESTS_TABLE", "mylearn-tests")
+	_ = os.Setenv("REGION", "eu-central-1")
+
+	request.HTTPMethod = "GET"
+	request.Path = "/tests"
+	return request
+}
 
 //func getDebugInput() events.APIGatewayProxyRequest {
 //	var request events.APIGatewayProxyRequest
@@ -142,18 +142,18 @@ func TestHandleRequest(t *testing.T) {
 //	return request
 //}
 
-func getDebugInput() events.APIGatewayProxyRequest {
-	var request events.APIGatewayProxyRequest
-	_ = os.Setenv("TESTS_TABLE", "mylearn-tests")
-	_ = os.Setenv("RESULTS_TABLE", "mylearn-tests-results")
-	_ = os.Setenv("REGION", "eu-central-1")
-
-	m := make(map[string]string)
-	m["testId"] = "1"
-	m["userId"] = "testuser6"
-
-	request.QueryStringParameters = m
-	request.HTTPMethod = "GET"
-	request.Path = "/results"
-	return request
-}
+//func getDebugInput() events.APIGatewayProxyRequest {
+//	var request events.APIGatewayProxyRequest
+//	_ = os.Setenv("TESTS_TABLE", "mylearn-tests")
+//	_ = os.Setenv("RESULTS_TABLE", "mylearn-tests-results")
+//	_ = os.Setenv("REGION", "eu-central-1")
+//
+//	m := make(map[string]string)
+//	m["testId"] = "1"
+//	m["userId"] = "testuser6"
+//
+//	request.QueryStringParameters = m
+//	request.HTTPMethod = "GET"
+//	request.Path = "/results"
+//	return request
+//}

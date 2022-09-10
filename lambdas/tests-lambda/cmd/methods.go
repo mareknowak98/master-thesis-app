@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
-	"golang.org/x/exp/slices"
 	"os"
 )
 
@@ -33,7 +32,7 @@ func (c *Client) GetTest(request events.APIGatewayProxyRequest) (string, error) 
 
 	// If query string empty
 	if len(request.QueryStringParameters) == 0 {
-		out, err := c.scanDynamo(make([]map[string]string, 0), []string{"TestId"}, tableName)
+		out, err := c.scanDynamo(make([]map[string]string, 0), []string{"TestId", "CombinedKey"}, tableName)
 		if err != nil {
 			return "", err
 		}
@@ -42,14 +41,14 @@ func (c *Client) GetTest(request events.APIGatewayProxyRequest) (string, error) 
 		err = attributevalue.UnmarshalListOfMaps(out.Items, &tests)
 		fmt.Printf("%#v\n", tests)
 
-		var uniqueTests []TestId
-		for _, elem := range tests {
-			if !slices.Contains(uniqueTests, elem) {
-				uniqueTests = append(uniqueTests, elem)
-			}
-		}
+		//var uniqueTests []TestId
+		//for _, elem := range tests {
+		//	if !slices.Contains(uniqueTests, elem) {
+		//		uniqueTests = append(uniqueTests, elem)
+		//	}
+		//}
 
-		jsonOut, err := json.Marshal(uniqueTests)
+		jsonOut, err := json.Marshal(tests)
 
 		if err != nil {
 			return "", err
@@ -141,7 +140,7 @@ func (c *Client) CheckTest(request events.APIGatewayProxyRequest) (string, error
 
 	var dbInput TestResult
 	dbInput.TestId = testAnswer.TestId
-	tmp := float32(len(testQuestions)) / float32(numberCorrect)
+	tmp := float32(numberCorrect) / float32(len(testQuestions))
 	dbInput.Result = fmt.Sprintf("%f", tmp)
 	dbInput.UserId = requestUser.(string)
 
