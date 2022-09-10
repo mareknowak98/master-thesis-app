@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
-	"mylearnproject/lambdas/cognito-user-lambda/cmd"
+	"mylearnproject/lambdas/tests-lambda/cmd"
 	"os"
 )
 
@@ -20,30 +20,29 @@ func responseGenerator(code int, message string) events.APIGatewayProxyResponse 
 }
 
 func HandleRequest(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	//tableName := os.Getenv("USER_TABLE")
 	region := os.Getenv("REGION")
-	//userPoolId := os.Getenv("USER_POOL_ID")
 
 	fmt.Printf("Request: %#v\n", request)
+
 	c := cmd.NewClient(region)
 
 	switch request.Path {
-	case "/login":
+	case "/tests":
 		switch request.HTTPMethod {
 		case "POST":
-			resp, err := c.Login(request)
+			resp, err := c.SaveTestQuestion(request)
 			if err != nil {
 				return responseGenerator(500, err.Error()), nil
 			}
 			return responseGenerator(200, resp), nil
-
-		default:
-			return responseGenerator(400, "No such method"), nil
-		}
-	case "/register":
-		switch request.HTTPMethod {
-		case "POST":
-			resp, err := c.Register(request)
+		case "GET":
+			resp, err := c.GetTest(request)
+			if err != nil {
+				return responseGenerator(500, err.Error()), nil
+			}
+			return responseGenerator(200, resp), nil
+		case "DELETE":
+			resp, err := c.DeleteQuestion(request)
 			if err != nil {
 				return responseGenerator(500, err.Error()), nil
 			}
@@ -51,10 +50,16 @@ func HandleRequest(request events.APIGatewayProxyRequest) (events.APIGatewayProx
 		default:
 			return responseGenerator(400, "No such method"), nil
 		}
-	case "/manageGroups":
+	case "/results":
 		switch request.HTTPMethod {
 		case "POST":
-			resp, err := c.ManageGroups(request)
+			resp, err := c.CheckTest(request)
+			if err != nil {
+				return responseGenerator(500, err.Error()), nil
+			}
+			return responseGenerator(200, resp), nil
+		case "GET":
+			resp, err := c.GetResults(request)
 			if err != nil {
 				return responseGenerator(500, err.Error()), nil
 			}

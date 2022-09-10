@@ -213,7 +213,8 @@ resource "aws_iam_role_policy" "mylearn_cognito_user" {
         "Action" = [
           "cognito-idp:InitiateAuth",
           "cognito-idp:AdminConfirmSignUp",
-          "cognito-idp:AdminAddUserToGroup"
+          "cognito-idp:AdminAddUserToGroup",
+          "cognito-idp:AdminRemoveUserFromGroup"
         ]
         "Resource" = "*"
       }
@@ -247,13 +248,20 @@ resource "aws_iam_role_policy" "mylearn_rest_lessons" {
           "dynamodb:UpdateItem",
         ],
         "Resource" = aws_dynamodb_table.mylearn_lessons.arn
+      },
+      {
+        "Effect" = "Allow",
+        "Action" = [
+          "dynamodb:Scan"
+        ],
+        "Resource" = aws_dynamodb_table.mylearn_lessons_connections.arn
       }
     ]
   })
 }
 
 
-# chat-lessons-lambda IAM
+# mylearn-lessons-lambda IAM
 resource "aws_iam_role" "mylearn_lessons" {
   name = format("%s-%s", "mylearn-lessons", var.region)
 
@@ -360,4 +368,40 @@ resource "aws_iam_role_policy" "s3_management_lambda" {
 }
 
 
+#tests-lambda IAM
+resource "aws_iam_role" "mylearn_tests_lambda" {
+  name = format("%s-%s", "tests-lambda", var.region)
+
+  assume_role_policy  = file("files/AWSLambdaTrustPolicy.json")
+  managed_policy_arns = ["arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"]
+}
+
+resource "aws_iam_role_policy" "mylearn_tests_lambda" {
+  name = format("%s-%s", "tests-lambda", var.region)
+  role = aws_iam_role.mylearn_tests_lambda.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        "Effect" = "Allow",
+        "Action" = [
+          "dynamodb:PutItem",
+          "dynamodb:Scan",
+          "dynamodb:Query",
+          "dynamodb:DeleteItem"
+        ],
+        "Resource" = aws_dynamodb_table.mylearn_tests.arn
+      },
+      {
+        "Effect" = "Allow",
+        "Action" = [
+          "dynamodb:PutItem",
+          "dynamodb:Query"
+        ],
+        "Resource" = aws_dynamodb_table.mylearn_tests_results.arn
+      }
+    ]
+  })
+}
 

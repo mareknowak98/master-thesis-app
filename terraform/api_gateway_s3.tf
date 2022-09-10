@@ -32,19 +32,19 @@ resource "aws_api_gateway_rest_api" "mylearn_s3" {
                     }
                   }
                 },
-                "headers": {
-                  "Access-Control-Allow-Origin": {
-                    "schema": {
-                      "type": "string"
+                "headers" : {
+                  "Access-Control-Allow-Origin" : {
+                    "schema" : {
+                      "type" : "string"
                     }
                   }
                 }
               },
               "500" : {
-                "headers": {
-                  "Access-Control-Allow-Origin": {
-                    "schema": {
-                      "type": "string"
+                "headers" : {
+                  "Access-Control-Allow-Origin" : {
+                    "schema" : {
+                      "type" : "string"
                     }
                   }
                 },
@@ -53,17 +53,17 @@ resource "aws_api_gateway_rest_api" "mylearn_s3" {
             },
             "x-amazon-apigateway-integration" : {
               "credentials" : aws_iam_role.s3_content_gateway.arn,
-              "responses": {
-                "default": {
-                  "statusCode": "500",
+              "responses" : {
+                "default" : {
+                  "statusCode" : "500",
                   "responseParameters" : {
-                    "method.response.header.Access-Control-Allow-Origin": "'*'"
+                    "method.response.header.Access-Control-Allow-Origin" : "'*'"
                   }
                 },
-                "2\\d{2}": {
-                  "statusCode": "200",
+                "2\\d{2}" : {
+                  "statusCode" : "200",
                   "responseParameters" : {
-                    "method.response.header.Access-Control-Allow-Origin": "'*'"
+                    "method.response.header.Access-Control-Allow-Origin" : "'*'"
                   }
                 }
               },
@@ -96,10 +96,10 @@ resource "aws_api_gateway_rest_api" "mylearn_s3" {
                       "$ref" : "#/components/schemas/Empty"
                     }
                   },
-                  "headers": {
-                    "Access-Control-Allow-Origin": {
-                      "schema": {
-                        "type": "string"
+                  "headers" : {
+                    "Access-Control-Allow-Origin" : {
+                      "schema" : {
+                        "type" : "string"
                       }
                     }
                   },
@@ -112,10 +112,10 @@ resource "aws_api_gateway_rest_api" "mylearn_s3" {
               },
               "500" : {
                 "description" : "500 response",
-                "headers": {
-                  "Access-Control-Allow-Origin": {
-                    "schema": {
-                      "type": "string"
+                "headers" : {
+                  "Access-Control-Allow-Origin" : {
+                    "schema" : {
+                      "type" : "string"
                     }
                   }
                 }
@@ -123,17 +123,17 @@ resource "aws_api_gateway_rest_api" "mylearn_s3" {
             },
             "x-amazon-apigateway-integration" : {
               "credentials" : aws_iam_role.s3_content_gateway.arn,
-              "responses": {
-                "default": {
-                  "statusCode": "500",
+              "responses" : {
+                "default" : {
+                  "statusCode" : "500",
                   "responseParameters" : {
-                    "method.response.header.Access-Control-Allow-Origin": "'*'"
+                    "method.response.header.Access-Control-Allow-Origin" : "'*'"
                   }
                 },
-                "2\\d{2}": {
-                  "statusCode": "200",
+                "2\\d{2}" : {
+                  "statusCode" : "200",
                   "responseParameters" : {
-                    "method.response.header.Access-Control-Allow-Origin": "'*'"
+                    "method.response.header.Access-Control-Allow-Origin" : "'*'"
                   }
                 }
               },

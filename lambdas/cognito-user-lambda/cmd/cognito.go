@@ -88,3 +88,28 @@ func (c *Client) registerUser(register UserRegister, clientId, userPoolId string
 
 	return resp, nil
 }
+
+func (c *Client) addUserToGroup(data ManageGroupsRequest, userPoolId string) error {
+	//remove user from curren groups
+	groups := []string{"admin-group", "parent-group", "student-group", "teacher-group"}
+
+	for _, group := range groups {
+		_, _ = c.CognitoCl.AdminRemoveUserFromGroup(context.Background(), &cognitoidentityprovider.AdminRemoveUserFromGroupInput{
+			GroupName:  aws.String(group),
+			UserPoolId: aws.String(userPoolId),
+			Username:   aws.String(data.Username),
+		})
+	}
+
+	// add user to given group
+	_, err := c.CognitoCl.AdminAddUserToGroup(context.Background(), &cognitoidentityprovider.AdminAddUserToGroupInput{
+		GroupName:  aws.String(data.GroupName),
+		UserPoolId: aws.String(userPoolId),
+		Username:   aws.String(data.Username),
+	})
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

@@ -21,3 +21,9 @@ type UserRegister struct {
 type UserRegisterResponse struct {
 	Message string `json:"message"`
 }
+
+type ManageGroupsRequest struct {
+	Operation string `json:"operation"`
+	Username  string `json:"username"`
+	GroupName string `json:"groupName"`
+}
