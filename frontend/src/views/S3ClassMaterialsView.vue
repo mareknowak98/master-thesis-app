@@ -111,6 +111,8 @@ export default {
         folder: route.params.classId + '/'
       }).toString()
 
+      console.log(process.env.VUE_APP_BACKEND_RESP_API + 'files?' + params)
+
       axios.get(process.env.VUE_APP_BACKEND_RESP_API + 'files?' + params, config).then(resp => {
         files.value = resp.data
       }).catch(err => {

@@ -20,6 +20,14 @@ import StartLessonTeacherView from "@/views/StartLessonTeacherView";
 import ConductLessonView from "@/views/ConductLessonView.vue";
 import AttendLessonView from "@/views/AttendLessonView";
 import CurrentLessonsView from "@/views/CurrentLessonsView";
+import ManageUsersView from "@/views/ManageUsersView";
+import ManageUserView from "@/views/ManageUserView";
+import CreateTestsView from "@/views/CreateTestsView";
+import CreateTestView from "@/views/CreateTestView";
+import StudentTestListView from "@/views/StudentTestListView";
+import StudentTakeTestView from "@/views/StudentTakeTestView";
+import StudentListTestResultsView from "@/views/StudentListTestResultsView.vue";
+import StudentTestResultsView from "@/views/StudentTestResultsView";
 
 const routes = [
   {
@@ -127,6 +135,46 @@ const routes = [
     name: "lessons",
     component: CurrentLessonsView,
   },
+  {
+    path: "/manageUsers",
+    name: "manageUsers",
+    component: ManageUsersView,
+  },
+  {
+    path: "/manageUsers/:userId",
+    name: "manageUser",
+    component: ManageUserView,
+  },
+  {
+    path: "/createTests",
+    name: "createTests",
+    component: CreateTestsView,
+  },
+  {
+    path: "/createTest/:classId",
+    name: "createTest",
+    component: CreateTestView,
+  },
+  {
+    path: "/testsList/:classId",
+    name: "testsList",
+    component: StudentTestListView,
+  },
+  {
+    path: "/testsList/takeTest/:testId",
+    name: "takeTest",
+    component: StudentTakeTestView,
+  },
+  {
+    path: "/testResultList",
+    name: "testResultList",
+    component: StudentListTestResultsView,
+  },
+  {
+    path: "/testResultList/:testId",
+    name: "testResult",
+    component: StudentTestResultsView,
+  }
 ];
 
 const router = createRouter({
