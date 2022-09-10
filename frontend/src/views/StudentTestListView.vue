@@ -58,7 +58,7 @@ export default {
       }).then(resp =>{
         tests.value = tests.value.filter(function (el)
         {
-          return el.combinedKey.startsWith(route.params.classId)
+          return el.combinedKey.startsWith(route.params.classId + ':')
         })
 
         tests.value = tests.value.filter((value, index, self) =>

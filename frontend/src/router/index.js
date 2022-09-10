@@ -28,6 +28,7 @@ import StudentTestListView from "@/views/StudentTestListView";
 import StudentTakeTestView from "@/views/StudentTakeTestView";
 import StudentListTestResultsView from "@/views/StudentListTestResultsView.vue";
 import StudentTestResultsView from "@/views/StudentTestResultsView";
+import TeacherTestResults from "@/views/TeacherTestResults";
 
 const routes = [
   {
@@ -174,6 +175,11 @@ const routes = [
     path: "/testResultList/:testId",
     name: "testResult",
     component: StudentTestResultsView,
+  },
+  {
+    path: "/testResults",
+    name: "testResults",
+    component: TeacherTestResults,
   }
 ];
 
