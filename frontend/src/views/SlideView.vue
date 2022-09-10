@@ -10,7 +10,7 @@
     <QASlide/>
   </div>
 
-  <h3>----------------</h3>
+  <p></p>
   <Button @click="deleteSlide" label="Delete slide" />
 
 </template>

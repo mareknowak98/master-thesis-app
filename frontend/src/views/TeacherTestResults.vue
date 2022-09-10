@@ -57,11 +57,9 @@ export default {
       }
       axios.get(process.env.VUE_APP_BACKEND_RESP_API + 'tests', config).then(resp => {
         tests.value = resp.data
-        console.log(resp.data)
 
       }).then(resp =>{
         let tmp = selectedClass.value
-        console.log(tmp)
         tests.value = tests.value.filter(function (el)
         {
           return el.combinedKey.startsWith(tmp + ':')
@@ -110,8 +108,6 @@ export default {
       const params = new URLSearchParams({
         testId: selectedTest.value
       }).toString()
-
-      console.log(params)
 
       axios.get(process.env.VUE_APP_BACKEND_RESP_API + 'results?' + params, config).then(resp => {
         results.value = resp.data

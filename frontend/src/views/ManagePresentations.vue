@@ -87,8 +87,8 @@ export default {
       let m = {
         lessonId: newLesson.value,
         slideId: "1",
-        slideType: "",
-        slideContent: "",
+        slideType: "TEXT",
+        slideContent: "<p><strong>Presentation: </strong>" + newLesson.value + "</p>",
         questionAnswers: ""
       }
       axios.post(process.env.VUE_APP_BACKEND_RESP_API + 'slides', m, config).then(resp => {

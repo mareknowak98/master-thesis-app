@@ -12,16 +12,20 @@
   </div>
 
   <div v-if="this.currentSlideType == 'QA'">
-    <h2>Question:</h2>
-    <h3>{{this.currentSlide.slideContent}}</h3>
-
+    <h4>Question:</h4>
+    <h2>{{this.currentSlide.slideContent}}</h2>
     <DataTable :value="answerList" v-model:selection="selectedAnswerList" selectionMode="multiple" dataKey="id" responsiveLayout="scroll" >
       <Column field="text" header="Select correct answers(multiple select with Alt)"></Column>
     </DataTable>
+    <Button @click="checkAnswers" label="Check your answer" />
+  </div>
 
-    <Button @click="checkAnswers" label="Check your answers (TODO)" />
 
-
+  <div v-if="this.isCorrectAnswer === true">
+    <Message severity="success">Correct</Message>
+  </div>
+  <div v-if="this.isCorrectAnswer === false">
+    <Message severity="error">Try again</Message>
   </div>
 
 
@@ -38,6 +42,7 @@ import { useRoute } from "vue-router";
 import Editor from "primevue/editor";
 import Column from "primevue/column";
 import DataTable from "primevue/datatable";
+import Message from 'primevue/message';
 
 export default {
   name: "AttendLessonView",
@@ -45,7 +50,8 @@ export default {
     LoggedNavbar,
     Editor,
     Column,
-    DataTable
+    DataTable,
+    Message
   },
   setup() {
     let lessonsSlides = ref(null)
@@ -64,6 +70,8 @@ export default {
     let correctAnswerList = ref(null)
     let selectedAnswerList = ref(null)
 
+    let isCorrectAnswer = ref(null)
+
     onMounted(() => {
       presentationId.value = route.params.presentationId
       getSlides()
@@ -81,8 +89,9 @@ export default {
 
         socket.value.onmessage = (m) => {
           currentSlide.value = JSON.parse(m.data)
-          console.log(JSON.parse(m.data))
           currentSlideType.value = JSON.parse(m.data).slideType
+          answerList.value = JSON.parse(JSON.parse(m.data).questionAnswers).answers
+          correctAnswerList.value = JSON.parse(JSON.parse(m.data).questionAnswers).correctAnswers
         }
 
       } catch (e) {
@@ -106,7 +115,7 @@ export default {
         lessonsSlides.value = resp.data
       }).then(resp => {
         if(currentSlide.value == null){
-          currentSlide.value = lessonsSlides.value[2]
+          currentSlide.value = lessonsSlides.value[0]
         }
       }).then(resp => {
         currentSlideType.value = currentSlide.value.slideType
@@ -121,8 +130,15 @@ export default {
       })
     }
 
-    function checkAnswers(){
+    const objectsEqual = (o1, o2) =>
+      Object.keys(o1).length === Object.keys(o2).length
+      && Object.keys(o1).every(p => o1[p] === o2[p]);
 
+    const arraysEqual = (a1, a2) =>
+      a1.length === a2.length && a1.every((o, idx) => objectsEqual(o, a2[idx]));
+
+    function checkAnswers(){
+      isCorrectAnswer.value = arraysEqual(correctAnswerList.value, selectedAnswerList.value)
     }
 
     return {
@@ -135,7 +151,8 @@ export default {
       answerList,
       correctAnswerList,
       selectedAnswerList,
-      checkAnswers
+      checkAnswers,
+      isCorrectAnswer
     }
   }
 };
