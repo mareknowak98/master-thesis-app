@@ -115,8 +115,16 @@ export default {
         lessonId: presentationId.value,
         slideId: slidesIds.value[slideI.value]
       }
-      console.log(m)
+      // console.log(m)
       socket.value.send(JSON.stringify(m))
+
+      currentSlide.value = lessonsSlides.value[slideI.value]
+      currentSlideType.value = currentSlide.value.slideType
+      currentSlide.value.questionAnswers = JSON.parse(currentSlide.value.questionAnswers)
+      answerList.value = currentSlide.value.questionAnswers.answers
+      slidesIds.value = lessonsSlides.value.map(function(item) {
+        return item['slideId'];
+      });
     }
 
     function previousSlide(){
@@ -127,8 +135,16 @@ export default {
         lessonId: presentationId.value,
         slideId: slidesIds.value[slideI.value]
       }
-      console.log(m)
+      // console.log(m)
       socket.value.send(JSON.stringify(m))
+
+      currentSlide.value = lessonsSlides.value[slideI.value]
+      currentSlideType.value = currentSlide.value.slideType
+      currentSlide.value.questionAnswers = JSON.parse(currentSlide.value.questionAnswers)
+      answerList.value = currentSlide.value.questionAnswers.answers
+      slidesIds.value = lessonsSlides.value.map(function(item) {
+        return item['slideId'];
+      });
     }
 
     function getSlides() {

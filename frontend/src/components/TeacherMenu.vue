@@ -4,7 +4,7 @@
     <div class="text-center">
       <img src="../assets/mylearn_logo.png" alt="Image" height="150" class="mb-3">
     </div>
-    <div class="text-700 text-sm mb-6">You are on teacher view</div>
+<!--    <div class="text-700 text-sm mb-6">You are on teacher view</div>-->
     <div class="grid">
       <div class="col-12 md:col-4 mb-4 px-5">
         <router-link to="/gradeBook">
@@ -21,9 +21,9 @@
             <span class="p-3 shadow-2 mb-3 inline-block surface-card" style="border-radius: 10px">
                 <i class="pi pi-lock text-4xl text-blue-500"></i>
             </span>
-        </router-link>
         <div class="text-900 mb-3 font-medium">Create/Edit Lesson</div>
         <span class="text-700 text-sm line-height-3">Create or edit your interactive presentations</span>
+        </router-link>
       </div>
       <div class="col-12 md:col-4 mb-4 px-5">
         <router-link to="/startLesson">
@@ -48,39 +48,38 @@
             <span class="p-3 shadow-2 mb-3 inline-block surface-card" style="border-radius: 10px">
                 <i class="pi pi-github text-4xl text-blue-500"></i>
             </span>
-        </router-link>
         <div class="text-900 mb-3 font-medium">Classes management</div>
         <span class="text-700 text-sm line-height-3">Create classes and attach users</span>
+        </router-link>
       </div>
       <div class="col-12 md:col-4 md:mb-4 mb-0 px-3">
         <router-link to="/classContent">
             <span class="p-3 shadow-2 mb-3 inline-block surface-card" style="border-radius: 10px">
                 <i class="pi pi-shield text-4xl text-blue-500"></i>
             </span>
-        </router-link>
-
         <div class="text-900 mb-3 font-medium">Learning materials</div>
         <span class="text-700 text-sm line-height-3">Share files with students and see uploaded materials</span>
+        </router-link>
       </div>
 
       <div class="col-12 md:col-4 md:mb-4 mb-0 px-3">
         <router-link to="/createTests">
             <span class="p-3 shadow-2 mb-3 inline-block surface-card" style="border-radius: 10px">
-                <i class="pi pi-shield text-4xl text-blue-500"></i>
+                <i class="pi pi-plus text-4xl text-blue-500"></i>
             </span>
-        </router-link>
         <div class="text-900 mb-3 font-medium">Create test</div>
-        <span class="text-700 text-sm line-height-3"></span>
+        <span class="text-700 text-sm line-height-3">Add new test for class</span>
+        </router-link>
       </div>
 
       <div class="col-12 md:col-4 md:mb-4 mb-0 px-3">
         <router-link to="/testResults">
             <span class="p-3 shadow-2 mb-3 inline-block surface-card" style="border-radius: 10px">
-                <i class="pi pi-shield text-4xl text-blue-500"></i>
+                <i class="pi pi-percentage text-4xl text-blue-500"></i>
             </span>
-        </router-link>
         <div class="text-900 mb-3 font-medium">Test results</div>
-        <span class="text-700 text-sm line-height-3"></span>
+        <span class="text-700 text-sm line-height-3">Check results of test</span>
+        </router-link>
       </div>
 
     </div>
