@@ -120,6 +120,7 @@ export default {
 
       axios.get(process.env.VUE_APP_BACKEND_RESP_API + 'classUsers?' + params, config).then(resp => {
         classStudents.value = resp.data.userList
+        classStudentsFormatted.value = []
       }).then( resp => {
         classStudents.value.forEach(username => {
           classStudentsFormatted.value.push({
@@ -142,6 +143,7 @@ export default {
         Username: username
       }
       axios.post(process.env.VUE_APP_BACKEND_RESP_API + 'classUsers', m, config).then(resp => {
+        getClassStudents()
       }).catch(err => {
         console.log(err)
       })
@@ -161,7 +163,7 @@ export default {
       console.log(config)
 
       axios.delete(process.env.VUE_APP_BACKEND_RESP_API + 'classUsers', config).then(resp => {
-        console.log(resp)
+        getClassStudents()
       }).catch(err => {
         console.log(err)
       })

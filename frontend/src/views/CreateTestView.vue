@@ -87,16 +87,14 @@ export default {
       let tmp2 = answerList.value.map(function(item) {
         return item['text'];
       });
-      let tmp3 = answerList.value.map(function(item) {
-        return item['text'];
-      });
+
 
       let obj = {
         testId : testId.value.toString(),
         combinedKey : tmp,
         question : questionText.value,
         answers : tmp2,
-        correctAnswer : tmp3[0]
+        correctAnswer : answerCorrect.value.text
       }
 
       questions.value.push(obj)

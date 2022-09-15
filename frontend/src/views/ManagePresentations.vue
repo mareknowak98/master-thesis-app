@@ -94,6 +94,7 @@ export default {
       axios.post(process.env.VUE_APP_BACKEND_RESP_API + 'slides', m, config).then(resp => {
         console.log(resp)
         newLesson.value = ""
+        getLessons()
       }).catch(err => {
         console.log(err)
       })
